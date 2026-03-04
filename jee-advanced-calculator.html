@@ -1,0 +1,2423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JEE Advanced · Formula Command Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:#030f1e}
+::-webkit-scrollbar-thumb{background:#00d4ff33;border-radius:3px}
+html,body{min-height:100vh;background:#020c18;font-family:'Rajdhani',sans-serif;color:#c8d6e5}
+body{
+  background-image:
+    radial-gradient(ellipse at 10% 30%,#0a2a5a22 0%,transparent 55%),
+    radial-gradient(ellipse at 90% 10%,#1a083a22 0%,transparent 55%),
+    linear-gradient(rgba(0,212,255,.015) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,255,.015) 1px,transparent 1px);
+  background-size:100% 100%,100% 100%,42px 42px,42px 42px;
+}
+
+/* ── HEADER ── */
+#header{
+  padding:20px 24px 18px;
+  border-bottom:1px solid #0e2240;
+  position:sticky;top:0;z-index:100;
+  background:rgba(2,12,24,.97);
+  backdrop-filter:blur(12px);
+}
+.header-inner{max-width:1500px;margin:0 auto}
+.site-tag{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:4px;color:#00d4ff44;margin-bottom:4px}
+h1{font-family:'Orbitron',monospace;font-size:clamp(16px,3vw,28px);font-weight:900;line-height:1.2;color:#fff}
+h1 .m{color:#00d4ff;text-shadow:0 0 18px #00d4ff66}
+h1 .p{color:#f97316;text-shadow:0 0 18px #f9731666}
+h1 .c{color:#10b981;text-shadow:0 0 18px #10b98166}
+.tagline{font-size:13px;color:#2a4a6a;margin-top:5px;font-family:'Rajdhani',sans-serif}
+.stats-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.stat-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#00d4ff08;border:1px solid #00d4ff1a;
+  border-radius:20px;padding:5px 12px;
+  font-family:'Orbitron',monospace;font-size:8px;letter-spacing:1px;color:#00d4ff77;
+}
+
+/* ── MODULE TABS ── */
+.mod-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.mod-tab{
+  font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:2px;
+  padding:8px 16px;border-radius:8px;cursor:pointer;
+  border:1px solid #1a3a5c;background:transparent;color:#2a4a6a;
+  transition:all .25s;text-transform:uppercase;
+}
+.mod-tab:hover{border-color:#00d4ff33;color:#4a8aab;background:#00d4ff06}
+.mod-tab.t-m{background:linear-gradient(135deg,#00d4ff18,#00d4ff08);border-color:#00d4ff;color:#00d4ff;box-shadow:0 0 16px #00d4ff18}
+.mod-tab.t-p{background:linear-gradient(135deg,#f9731618,#f9731608);border-color:#f97316;color:#fb923c;box-shadow:0 0 16px #f9731618}
+.mod-tab.t-c{background:linear-gradient(135deg,#10b98118,#10b98108);border-color:#10b981;color:#34d399;box-shadow:0 0 16px #10b98118}
+.mod-tab.t-calc{background:linear-gradient(135deg,#a78bfa18,#a78bfa08);border-color:#a78bfa;color:#c4b5fd;box-shadow:0 0 16px #a78bfa18}
+
+/* ── MAIN LAYOUT ── */
+#main{max-width:1500px;margin:0 auto;padding:22px 20px 80px}
+
+/* ── SEARCH / FILTER BAR ── */
+#search-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;color:#2a4a6a;pointer-events:none}
+#search-inp{
+  background:#050e1a;border:1px solid #122035;color:#c8d6e5;
+  font-family:'Rajdhani',sans-serif;font-size:15px;
+  padding:10px 14px 10px 40px;border-radius:9px;width:100%;outline:none;transition:all .25s;
+}
+#search-inp:focus{border-color:#00d4ff33;box-shadow:0 0 14px #00d4ff0d}
+#search-inp::placeholder{color:#1a3050}
+#cat-filter{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.cat-btn{
+  font-family:'Orbitron',monospace;font-size:8px;letter-spacing:1px;
+  padding:6px 12px;border-radius:20px;cursor:pointer;
+  border:1px solid #122035;background:transparent;color:#2a4a6a;
+  transition:all .2s;white-space:nowrap;
+}
+.cat-btn:hover{border-color:#00d4ff22;color:#4a8aab}
+.cat-btn.active{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent)}
+#result-count{font-family:'Orbitron',monospace;font-size:9px;color:#1a3050;letter-spacing:2px;margin-bottom:14px}
+
+/* ── FORMULA GRID ── */
+#formula-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:12px;
+}
+.f-card{
+  background:linear-gradient(145deg,#08111f,#0b1928);
+  border:1px solid #0d2040;border-radius:12px;cursor:pointer;
+  transition:all .25s;position:relative;overflow:hidden;padding:15px;
+}
+.f-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,#00d4ff22,transparent);
+  transition:opacity .25s;
+}
+.f-card:hover{transform:translateY(-3px);border-color:#00d4ff2a;box-shadow:0 10px 28px #00000055,0 0 18px #00d4ff0d}
+.f-card.open{border-color:var(--accent-card);box-shadow:0 0 24px color-mix(in srgb,var(--accent-card) 20%,transparent)}
+.f-card.open::before{background:linear-gradient(90deg,transparent,var(--accent-card),transparent);opacity:1}
+.cat-badge{
+  display:inline-block;font-size:8px;font-family:'Orbitron',monospace;
+  letter-spacing:1px;padding:2px 8px;border-radius:20px;font-weight:700;
+  text-transform:uppercase;margin-bottom:8px;
+}
+.f-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#dde8f5;margin-bottom:7px}
+.f-eq{
+  font-family:'Space Mono',monospace;font-size:11px;
+  background:#00d4ff08;padding:7px 10px;border-radius:6px;
+  border-left:2px solid var(--accent-card,#00d4ff);
+  color:var(--accent-card,#00d4ff);line-height:1.6;word-break:break-word;
+  margin-bottom:7px;
+}
+.f-desc{font-size:12px;color:#1e3a5a;font-family:'Rajdhani',sans-serif;margin-bottom:8px}
+.vars-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.var-pill{
+  font-size:9px;font-family:'Space Mono',monospace;padding:2px 7px;
+  border-radius:4px;background:color-mix(in srgb,var(--accent-card,#00d4ff) 10%,transparent);
+  color:color-mix(in srgb,var(--accent-card,#00d4ff) 60%,#888);
+  border:1px solid color-mix(in srgb,var(--accent-card,#00d4ff) 18%,transparent);
+}
+.open-label{
+  font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;
+  color:#1a3050;margin-top:4px;text-align:right;transition:color .2s;
+}
+.f-card.open .open-label{color:var(--accent-card,#00d4ff)}
+
+/* ── REACTOR ── */
+#reactor{
+  margin-top:22px;
+  background:linear-gradient(180deg,#030e1c,#050c18);
+  border:1px solid #00d4ff2a;border-radius:16px;
+  box-shadow:0 0 50px #00d4ff08;position:relative;overflow:hidden;
+  padding:24px;
+}
+#reactor::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--r-accent,#00d4ff),#7c3aed,var(--r-accent,#00d4ff),transparent);
+}
+.reactor-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.reactor-tag{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:3px;color:var(--r-accent,#00d4ff);opacity:.6;margin-bottom:5px}
+.reactor-name{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:#e8f0f8}
+.reactor-formula{
+  font-family:'Space Mono',monospace;font-size:13px;
+  background:color-mix(in srgb,var(--r-accent,#00d4ff) 8%,transparent);
+  padding:10px 14px;border-radius:8px;
+  border-left:2px solid var(--r-accent,#00d4ff);
+  color:var(--r-accent,#00d4ff);line-height:1.7;margin-top:8px;
+  word-break:break-word;max-width:600px;
+}
+#btn-close-reactor{
+  background:transparent;border:1px solid #122035;color:#2a4a6a;
+  font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;
+  padding:7px 14px;border-radius:7px;cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+#btn-close-reactor:hover{border-color:#ff444433;color:#ff6b6b}
+
+.solve-for-section{margin-bottom:18px}
+.field-label{
+  font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;
+  color:var(--r-accent,#00d4ff);opacity:.7;display:block;margin-bottom:7px;
+}
+select.r-select{
+  background:#030e1c;border:1px solid color-mix(in srgb,var(--r-accent,#00d4ff) 30%,transparent);
+  color:var(--r-accent,#00d4ff);font-family:'Rajdhani',sans-serif;font-size:15px;
+  padding:10px 14px;border-radius:8px;width:100%;max-width:400px;
+  outline:none;cursor:pointer;
+}
+.inputs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:18px}
+.inp-group label{
+  font-family:'Orbitron',monospace;font-size:9px;letter-spacing:1px;
+  color:#2a4a6a;display:block;margin-bottom:6px;
+}
+.inp-group input{
+  background:#020c17;border:1px solid #122035;color:#dde8f5;
+  font-family:'Space Mono',monospace;font-size:13px;
+  padding:10px 13px;border-radius:7px;width:100%;outline:none;transition:all .25s;
+}
+.inp-group input:focus{border-color:color-mix(in srgb,var(--r-accent,#00d4ff) 50%,transparent);box-shadow:0 0 10px color-mix(in srgb,var(--r-accent,#00d4ff) 12%,transparent);color:var(--r-accent,#00d4ff)}
+.inp-group input::placeholder{color:#0e2030;font-size:11px}
+.action-row{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+#btn-compute{
+  background:linear-gradient(135deg,var(--r-accent,#00d4ff),#7c3aed);
+  border:none;color:#fff;font-family:'Orbitron',monospace;font-size:10px;
+  font-weight:700;letter-spacing:3px;padding:13px 28px;border-radius:8px;
+  cursor:pointer;transition:all .3s;flex:1;min-width:180px;
+  box-shadow:0 4px 14px color-mix(in srgb,var(--r-accent,#00d4ff) 25%,transparent);
+}
+#btn-compute:hover{transform:translateY(-2px);box-shadow:0 8px 22px color-mix(in srgb,var(--r-accent,#00d4ff) 40%,transparent)}
+#btn-clear-r{
+  background:transparent;border:1px solid #122035;color:#2a4a6a;
+  font-family:'Orbitron',monospace;font-size:9px;letter-spacing:2px;
+  padding:13px 20px;border-radius:8px;cursor:pointer;transition:all .2s;
+}
+#btn-clear-r:hover{border-color:#ff444433;color:#ff6b6b}
+#result-box{display:none}
+#error-box{
+  display:none;background:#1e0808;border:1px solid #ff444433;
+  border-radius:8px;padding:12px 16px;color:#ff6b6b;
+  font-family:'Space Mono',monospace;font-size:12px;margin-bottom:16px;
+}
+.result-panel{
+  background:#020c17;border:1px solid color-mix(in srgb,var(--r-accent,#00d4ff) 22%,transparent);
+  border-radius:12px;padding:22px;text-align:center;
+}
+.result-label-small{
+  font-family:'Orbitron',monospace;font-size:8px;letter-spacing:3px;
+  color:var(--r-accent-a,.5);margin-bottom:8px;opacity:.6;
+}
+.result-val-big{
+  font-family:'Space Mono',monospace;font-size:clamp(22px,4vw,36px);
+  font-weight:700;color:var(--r-accent,#00d4ff);
+  text-shadow:0 0 24px color-mix(in srgb,var(--r-accent,#00d4ff) 60%,transparent);
+  word-break:break-all;
+}
+.result-extra{margin-top:12px;font-family:'Space Mono',monospace;font-size:12px;color:#2a4a6a;line-height:1.7}
+
+/* ── CALCULUS WORKBENCH ── */
+#calculus-section{display:none}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.calc-grid{grid-template-columns:1fr}}
+.calc-card{
+  background:linear-gradient(145deg,#08111f,#0b1928);
+  border:1px solid #1a0a4433;border-radius:13px;padding:22px;
+  position:relative;overflow:hidden;
+}
+.calc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#a78bfa,transparent)}
+.calc-card.green::before{background:linear-gradient(90deg,transparent,#10b981,transparent)}
+.calc-card.full{grid-column:1/-1}
+.calc-label{font-family:'Orbitron',monospace;font-size:9px;letter-spacing:3px;color:#a78bfa88;margin-bottom:14px}
+.calc-label.green{color:#10b98188}
+.calc-label.orange{color:#f9731688}
+.c-inp{
+  background:#030e1c;border:1px solid #1a0a4433;color:#c8d6e5;
+  font-family:'Space Mono',monospace;font-size:13px;
+  padding:10px 13px;border-radius:7px;width:100%;outline:none;transition:all .25s;margin-bottom:10px;
+}
+.c-inp:focus{border-color:#a78bfa55;box-shadow:0 0 10px #a78bfa12;color:#c4b5fd}
+.c-inp.green:focus{border-color:#10b98155;color:#34d399}
+.c-inp-label{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:1px;color:#2a4a6a;display:block;margin-bottom:5px}
+.btn-diff{background:linear-gradient(135deg,#10b981,#059669);border:none;color:#fff;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:2px;padding:12px;border-radius:7px;cursor:pointer;width:100%;transition:all .25s;margin-top:4px}
+.btn-integ{background:linear-gradient(135deg,#a78bfa,#7c3aed);border:none;color:#fff;font-family:'Orbitron',monospace;font-size:9px;font-weight:700;letter-spacing:2px;padding:12px;border-radius:7px;cursor:pointer;width:100%;transition:all .25s;margin-top:4px}
+.btn-diff:hover,.btn-integ:hover{transform:translateY(-2px);box-shadow:0 6px 18px #00000044}
+.calc-result{background:#020c17;border-radius:9px;padding:14px;margin-top:14px;border-left:3px solid #a78bfa;display:none}
+.calc-result.green{border-left-color:#10b981}
+.c-result-label{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:#a78bfa66;margin-bottom:8px}
+.c-result-label.green{color:#10b98166}
+.c-result-val{font-family:'Space Mono',monospace;color:#c4b5fd;font-size:15px;word-break:break-all;line-height:1.6}
+.c-result-val.green{color:#34d399}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:7px;margin-top:14px}
+.ref-row{display:flex;justify-content:space-between;align-items:center;padding:7px 11px;background:#f9731608;border:1px solid #f9731618;border-radius:7px;gap:8px}
+.ref-lhs{font-family:'Space Mono',monospace;font-size:11px;color:#fb923c}
+.ref-rhs{font-family:'Space Mono',monospace;font-size:11px;color:#fde68a}
+.c-error{background:#1e0808;border:1px solid #ff444433;border-radius:7px;padding:10px 14px;color:#ff6b6b;font-family:'Space Mono',monospace;font-size:11px;margin-top:10px;display:none}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.anim{animation:fadeUp .3s ease both}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:60px 20px;color:#1a3050}
+.empty-icon{font-size:48px;margin-bottom:14px;opacity:.3}
+.empty-text{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:3px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  #header{padding:14px 14px 12px}
+  #main{padding:14px 12px 60px}
+  .inputs-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="header-inner">
+    <div class="site-tag">JEE ADVANCED  ·  FORMULA COMMAND CENTER  ·  v2.0</div>
+    <h1><span class="m">MATHS</span> · <span class="p">PHYSICS</span> · <span class="c">CHEMISTRY</span></h1>
+    <div class="tagline">Reverse-solve any variable · Symbolic differentiation · Definite integration · All JEE Advanced formulas</div>
+    <div class="stats-row">
+      <div class="stat-chip"><span style="color:#00d4ff">●</span> <span id="total-count">0</span> FORMULAS</div>
+      <div class="stat-chip" style="border-color:#a78bfa1a;color:#a78bfa77"><span style="color:#a78bfa">◆</span> 4 MODULES</div>
+      <div class="stat-chip" style="border-color:#10b9811a;color:#10b98177"><span style="color:#10b981">✦</span> FULLY REVERSE-SOLVABLE</div>
+    </div>
+    <div class="mod-tabs">
+      <button class="mod-tab t-m" onclick="setModule('maths')">Σ MATHS</button>
+      <button class="mod-tab" onclick="setModule('physics')">⚛ PHYSICS</button>
+      <button class="mod-tab" onclick="setModule('chemistry')">⚗ CHEMISTRY</button>
+      <button class="mod-tab" onclick="setModule('calculus')">∫ CALCULUS</button>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+  <!-- Formula section -->
+  <div id="formula-section">
+    <div id="search-bar">
+      <div class="search-wrap">
+        <span class="search-icon">⌕</span>
+        <input id="search-inp" type="text" placeholder="Search formulas..." oninput="renderCards()">
+      </div>
+      <div id="cat-filter"></div>
+    </div>
+    <div id="result-count"></div>
+    <div id="formula-grid"></div>
+    <div id="reactor" style="display:none">
+      <div class="reactor-top">
+        <div>
+          <div class="reactor-tag">⟨ REACTOR — SOLVE ANY VARIABLE ⟩</div>
+          <div class="reactor-name" id="r-name"></div>
+          <div class="reactor-formula" id="r-formula"></div>
+        </div>
+        <button id="btn-close-reactor" onclick="closeReactor()">✕ CLOSE</button>
+      </div>
+      <div class="solve-for-section">
+        <label class="field-label">SOLVE FOR</label>
+        <select class="r-select" id="r-solve-for" onchange="renderReactorInputs()"></select>
+      </div>
+      <div class="inputs-grid" id="r-inputs"></div>
+      <div class="action-row">
+        <button id="btn-compute" onclick="compute()">▶ COMPUTE</button>
+        <button id="btn-clear-r" onclick="clearReactor()">CLEAR</button>
+      </div>
+      <div id="error-box"></div>
+      <div id="result-box">
+        <div class="result-panel">
+          <div class="result-label-small" id="r-solve-label"></div>
+          <div class="result-val-big" id="r-result-val"></div>
+          <div class="result-extra" id="r-result-extra"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calculus workbench -->
+  <div id="calculus-section">
+    <div class="calc-grid">
+      <div class="calc-card full">
+        <div class="calc-label orange">⟨ FUNCTION INPUT ⟩</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="flex:3;min-width:200px">
+            <label class="c-inp-label">FUNCTION f(x)</label>
+            <input class="c-inp" id="c-func" value="x^2 + sin(x)" placeholder="e.g. x^2 + sin(x)">
+          </div>
+          <div style="flex:1;min-width:70px">
+            <label class="c-inp-label">VARIABLE</label>
+            <input class="c-inp" id="c-var" value="x" placeholder="x">
+          </div>
+        </div>
+        <div style="padding:9px 13px;background:#f9731608;border-radius:7px;border:1px solid #f9731618;margin-top:4px">
+          <span style="font-family:'Space Mono',monospace;font-size:11px;color:#f9731688">Syntax: </span>
+          <span style="font-family:'Space Mono',monospace;font-size:11px;color:#fed7aa">sin cos tan asin acos atan exp log sqrt abs pi e ^ * + - ( )</span>
+        </div>
+      </div>
+      <div class="calc-card green">
+        <div class="calc-label green">⟨ DIFFERENTIATION ⟩</div>
+        <label class="c-inp-label">EVALUATE AT POINT (optional)</label>
+        <input class="c-inp green" id="c-diff-pt" placeholder="e.g. 1.5">
+        <button class="btn-diff" onclick="doDiff()">DIFFERENTIATE</button>
+        <div class="c-error" id="diff-error"></div>
+        <div class="calc-result green" id="diff-result">
+          <div class="c-result-label green">DERIVATIVE d/dx</div>
+          <div class="c-result-val green" id="diff-symbolic"></div>
+          <div id="diff-at-point" style="margin-top:10px;padding:8px 12px;background:#10b98111;border-radius:6px;border-left:2px solid #10b981;display:none">
+            <span style="font-family:'Space Mono',monospace;font-size:12px;color:#34d399"></span>
+          </div>
+        </div>
+      </div>
+      <div class="calc-card">
+        <div class="calc-label">⟨ DEFINITE INTEGRATION ⟩</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div>
+            <label class="c-inp-label">LOWER BOUND</label>
+            <input class="c-inp" id="c-lower" value="0" placeholder="0">
+          </div>
+          <div>
+            <label class="c-inp-label">UPPER BOUND</label>
+            <input class="c-inp" id="c-upper" value="1" placeholder="1">
+          </div>
+        </div>
+        <button class="btn-integ" onclick="doInteg()">∫ INTEGRATE (Simpson's Rule)</button>
+        <div class="c-error" id="integ-error"></div>
+        <div class="calc-result" id="integ-result">
+          <div class="c-result-label">DEFINITE INTEGRAL</div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:#a78bfa66;margin-bottom:6px" id="integ-expr"></div>
+          <div class="c-result-val" id="integ-val"></div>
+        </div>
+      </div>
+      <div class="calc-card full">
+        <div class="calc-label orange">⟨ STANDARD DERIVATIVES & INTEGRALS ⟩</div>
+        <div class="ref-grid" id="ref-table"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════════
+const R=Math.PI/180, D=180/Math.PI;
+const rad=d=>d*R, deg=r=>r*D;
+const fac=n=>{if(n<0)return NaN;let f=1;for(let i=2;i<=n;i++)f*=i;return f};
+const C=(n,r)=>fac(n)/(fac(r)*fac(n-r));
+const fmt=n=>{
+  if(n===null||n===undefined||!isFinite(n)||isNaN(n))return null;
+  const a=Math.abs(n);
+  if(a>0&&a<1e-9)return n.toExponential(6);
+  if(a>1e12)return n.toExponential(6);
+  const s=parseFloat(n.toPrecision(10)).toString();
+  return s;
+};
+const getV=(vals,k)=>vals[k]; // shorthand
+
+// ═══════════════════════════════════════════════════════════
+// FORMULA DATABASE
+// Each formula: {id, name, cat, module, formula, vars:[{k,l,hint}], solve(vals,target)->string|null}
+// ═══════════════════════════════════════════════════════════
+const DB=[];
+const add=(f)=>DB.push(f);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// MATHEMATICS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// ── Sequences & Series ──
+add({id:'ap_nth',name:'AP — nth Term',cat:'Sequences & Series',module:'maths',
+  formula:'aₙ = a + (n − 1)d',desc:'Arithmetic Progression nth term',
+  vars:[{k:'an',l:'nth Term aₙ'},{k:'a',l:'First Term a'},{k:'n',l:'Term Number n'},{k:'d',l:'Common Difference d'}],
+  solve(v,t){const{an,a,n,d}=v;
+    if(t==='an')return fmt(a+(n-1)*d);
+    if(t==='a') return fmt(an-(n-1)*d);
+    if(t==='n') return fmt((an-a)/d+1);
+    if(t==='d') return n<=1?null:fmt((an-a)/(n-1));
+  }
+});
+add({id:'ap_sum',name:'AP — Sum of n Terms',cat:'Sequences & Series',module:'maths',
+  formula:'Sₙ = (n/2)[2a + (n−1)d]  OR  Sₙ = (n/2)(a + l)',
+  desc:'Sum of first n terms; l = last term',
+  vars:[{k:'sn',l:'Sum Sₙ'},{k:'a',l:'First Term a'},{k:'n',l:'Number of Terms n'},{k:'d',l:'Common Difference d'}],
+  solve(v,t){const{sn,a,n,d}=v;
+    if(t==='sn')return fmt(n/2*(2*a+(n-1)*d));
+    if(t==='a') return fmt(sn/n-(n-1)*d/2);
+    if(t==='d') return n<=1?null:fmt((2*sn/n-2*a)/(n-1));
+    if(t==='n'){const A=d/2,B=a-d/2,C=-sn,disc=B*B-4*A*C;return disc>=0?fmt((-B+Math.sqrt(disc))/(2*A)):null;}
+  }
+});
+add({id:'gp_nth',name:'GP — nth Term',cat:'Sequences & Series',module:'maths',
+  formula:'aₙ = a · rⁿ⁻¹',desc:'Geometric Progression nth term',
+  vars:[{k:'an',l:'nth Term aₙ'},{k:'a',l:'First Term a'},{k:'r',l:'Common Ratio r'},{k:'n',l:'Term Number n'}],
+  solve(v,t){const{an,a,r,n}=v;
+    if(t==='an')return fmt(a*Math.pow(r,n-1));
+    if(t==='a') return fmt(an/Math.pow(r,n-1));
+    if(t==='r') return fmt(Math.pow(an/a,1/(n-1)));
+    if(t==='n') return r===1?null:fmt(Math.log(an/a)/Math.log(r)+1);
+  }
+});
+add({id:'gp_sum',name:'GP — Sum of n Terms',cat:'Sequences & Series',module:'maths',
+  formula:'Sₙ = a(rⁿ − 1)/(r − 1),  r ≠ 1',desc:'Sum of finite GP (r ≠ 1)',
+  vars:[{k:'sn',l:'Sum Sₙ'},{k:'a',l:'First Term a'},{k:'r',l:'Common Ratio r'},{k:'n',l:'Terms n'}],
+  solve(v,t){const{sn,a,r,n}=v;
+    if(t==='sn')return r===1?fmt(a*n):fmt(a*(Math.pow(r,n)-1)/(r-1));
+    if(t==='a') return fmt(sn*(r-1)/(Math.pow(r,n)-1));
+    if(t==='n') return fmt(Math.log(sn*(r-1)/a+1)/Math.log(r));
+  }
+});
+add({id:'gp_inf',name:'GP — Infinite Sum',cat:'Sequences & Series',module:'maths',
+  formula:'S∞ = a / (1 − r),   |r| < 1',desc:'Sum of infinite convergent GP',
+  vars:[{k:'s',l:'Infinite Sum S∞'},{k:'a',l:'First Term a'},{k:'r',l:'Common Ratio r (|r|<1)'}],
+  solve(v,t){const{s,a,r}=v;
+    if(t==='s') return Math.abs(r)>=1?null:fmt(a/(1-r));
+    if(t==='a') return fmt(s*(1-r));
+    if(t==='r') return fmt(1-a/s);
+  }
+});
+add({id:'hp_nth',name:'HP — nth Term',cat:'Sequences & Series',module:'maths',
+  formula:'aₙ = 1/[1/a + (n−1)·d\']\nwhere d\' = 1/a₂ − 1/a₁',
+  desc:'nth term of Harmonic Progression (reciprocal of AP)',
+  vars:[{k:'an',l:'nth Term aₙ'},{k:'a',l:'1st Term a'},{k:'d',l:"Common diff d' of reciprocal AP"},{k:'n',l:'n'}],
+  solve(v,t){const{an,a,d,n}=v;
+    if(t==='an')return fmt(1/(1/a+(n-1)*d));
+    if(t==='n') return fmt((1/an-1/a)/d+1);
+  }
+});
+add({id:'am_gm_hm',name:'AM–GM–HM Inequality',cat:'Sequences & Series',module:'maths',
+  formula:'AM ≥ GM ≥ HM\nAM=(a+b)/2, GM=√(ab), HM=2ab/(a+b)',
+  desc:'For positive numbers a, b',
+  vars:[{k:'am',l:'AM (a+b)/2'},{k:'gm',l:'GM √(ab)'},{k:'hm',l:'HM 2ab/(a+b)'},{k:'a',l:'Number a'},{k:'b',l:'Number b'}],
+  solve(v,t){const{a,b}=v;
+    if(t==='am')return fmt((a+b)/2);
+    if(t==='gm')return fmt(Math.sqrt(a*b));
+    if(t==='hm')return fmt(2*a*b/(a+b));
+    if(t==='a') return fmt(2*v.am-b); // if am given
+    if(t==='b') return fmt(2*v.am-a);
+  }
+});
+add({id:'sum1',name:'Sum 1 to n',cat:'Sequences & Series',module:'maths',
+  formula:'Σ k = n(n+1)/2',desc:'Sum of first n natural numbers',
+  vars:[{k:'s',l:'Sum Σk'},{k:'n',l:'n'}],
+  solve(v,t){const{s,n}=v;
+    if(t==='s')return fmt(n*(n+1)/2);
+    if(t==='n')return fmt((-1+Math.sqrt(1+8*s))/2);
+  }
+});
+add({id:'sum2',name:'Sum of Squares 1² to n²',cat:'Sequences & Series',module:'maths',
+  formula:'Σ k² = n(n+1)(2n+1)/6',desc:'Sum of squares of first n natural numbers',
+  vars:[{k:'s',l:'Sum Σk²'},{k:'n',l:'n'}],
+  solve(v,t){const{n}=v;if(t==='s')return fmt(n*(n+1)*(2*n+1)/6);}
+});
+add({id:'sum3',name:'Sum of Cubes 1³ to n³',cat:'Sequences & Series',module:'maths',
+  formula:'Σ k³ = [n(n+1)/2]²',desc:'Sum of cubes of first n natural numbers',
+  vars:[{k:'s',l:'Sum Σk³'},{k:'n',l:'n'}],
+  solve(v,t){const{n}=v;const x=n*(n+1)/2;if(t==='s')return fmt(x*x);}
+});
+
+// ── Quadratics ──
+add({id:'quad',name:'Quadratic Formula',cat:'Algebra',module:'maths',
+  formula:'x = [−b ± √(b²−4ac)] / 2a',desc:'Roots of ax² + bx + c = 0',
+  vars:[{k:'x1',l:'Root x₁ (larger)'},{k:'x2',l:'Root x₂ (smaller)'},{k:'a',l:'Coeff a'},{k:'b',l:'Coeff b'},{k:'c',l:'Coeff c'}],
+  solve(v,t){const{a,b,c,x1,x2}=v;const d=b*b-4*a*c;
+    if(t==='x1')return d<0?null:fmt((-b+Math.sqrt(d))/(2*a));
+    if(t==='x2')return d<0?null:fmt((-b-Math.sqrt(d))/(2*a));
+    if(t==='c') return fmt(a*x1*x2);
+    if(t==='b') return fmt(-a*(x1+x2));
+    if(t==='a') return fmt(c/(x1*x2));
+  }
+});
+add({id:'vieta',name:"Vieta's Formulas",cat:'Algebra',module:'maths',
+  formula:'α+β = −b/a,   αβ = c/a',desc:'Sum and product of roots',
+  vars:[{k:'sum',l:'Sum α+β'},{k:'prod',l:'Product αβ'},{k:'a',l:'Coeff a'},{k:'b',l:'Coeff b'},{k:'c',l:'Coeff c'}],
+  solve(v,t){const{sum,prod,a,b,c}=v;
+    if(t==='sum') return fmt(-b/a);
+    if(t==='prod')return fmt(c/a);
+    if(t==='b')   return fmt(-sum*a);
+    if(t==='c')   return fmt(prod*a);
+  }
+});
+add({id:'disc',name:'Discriminant',cat:'Algebra',module:'maths',
+  formula:'Δ = b² − 4ac',desc:'Δ>0: 2 real distinct; Δ=0: equal; Δ<0: complex',
+  vars:[{k:'D',l:'Discriminant Δ'},{k:'a',l:'Coeff a'},{k:'b',l:'Coeff b'},{k:'c',l:'Coeff c'}],
+  solve(v,t){const{D,a,b,c}=v;
+    if(t==='D')return fmt(b*b-4*a*c);
+    if(t==='c')return fmt((b*b-D)/(4*a));
+  }
+});
+
+// ── Binomial Theorem ──
+add({id:'binom',name:'Binomial Theorem — General Term',cat:'Algebra',module:'maths',
+  formula:'T_{r+1} = ⁿCᵣ · aⁿ⁻ʳ · bʳ',desc:'(r+1)th term in expansion of (a+b)ⁿ',
+  vars:[{k:'T',l:'Term T_{r+1}'},{k:'n',l:'Power n'},{k:'r',l:'Term index r (0-based)'},{k:'a',l:'a'},{k:'b',l:'b'}],
+  solve(v,t){const{n,r,a,b}=v;if(t==='T')return fmt(C(n,r)*Math.pow(a,n-r)*Math.pow(b,r));}
+});
+add({id:'binom_coeff',name:'Binomial — Middle Term',cat:'Algebra',module:'maths',
+  formula:'Middle term at r = n/2 (n even) or (n±1)/2',
+  desc:'Index of middle term(s) in binomial expansion',
+  vars:[{k:'r',l:'Middle term r (0-indexed)'},{k:'n',l:'Power n'}],
+  solve(v,t){const{n}=v;
+    if(t==='r') return n%2===0?fmt(n/2):fmt((n-1)/2)+' and '+fmt((n+1)/2);
+  }
+});
+
+// ── Permutations & Combinations ──
+add({id:'perm',name:'Permutation ⁿPᵣ',cat:'Combinatorics',module:'maths',
+  formula:'ⁿPᵣ = n! / (n−r)!',desc:'Ordered arrangements',
+  vars:[{k:'p',l:'ⁿPᵣ'},{k:'n',l:'n'},{k:'r',l:'r'}],
+  solve(v,t){const{n,r}=v;if(t==='p')return fmt(fac(n)/fac(n-r));}
+});
+add({id:'comb',name:'Combination ⁿCᵣ',cat:'Combinatorics',module:'maths',
+  formula:'ⁿCᵣ = n! / [r!(n−r)!]',desc:'Unordered selections',
+  vars:[{k:'c',l:'ⁿCᵣ'},{k:'n',l:'n'},{k:'r',l:'r'}],
+  solve(v,t){const{n,r}=v;if(t==='c')return fmt(C(n,r));}
+});
+add({id:'comb_id',name:'Combination Identities',cat:'Combinatorics',module:'maths',
+  formula:'ⁿCᵣ = ⁿCₙ₋ᵣ,  ⁿC₀ = ⁿCₙ = 1\nⁿCᵣ + ⁿCᵣ₋₁ = ⁿ⁺¹Cᵣ (Pascal)',
+  desc:"Pascal's identity",
+  vars:[{k:'c1',l:'ⁿCᵣ'},{k:'c2',l:'ⁿCₙ₋ᵣ'},{k:'n',l:'n'},{k:'r',l:'r'}],
+  solve(v,t){const{n,r}=v;if(t==='c1')return fmt(C(n,r));if(t==='c2')return fmt(C(n,n-r));}
+});
+
+// ── Complex Numbers ──
+add({id:'cmplx_mod',name:'Complex Modulus & Argument',cat:'Complex Numbers',module:'maths',
+  formula:'|z| = √(a²+b²),  arg(z) = atan2(b,a)',desc:'Modulus and argument of z = a + bi',
+  vars:[{k:'mod',l:'Modulus |z|'},{k:'arg',l:'Argument θ (°)'},{k:'a',l:'Real part a'},{k:'b',l:'Imaginary part b'}],
+  solve(v,t){const{mod,arg,a,b}=v;
+    if(t==='mod')return fmt(Math.sqrt(a*a+b*b));
+    if(t==='arg')return fmt(deg(Math.atan2(b,a)));
+    if(t==='a')  return fmt(mod*Math.cos(rad(arg)));
+    if(t==='b')  return fmt(mod*Math.sin(rad(arg)));
+  }
+});
+add({id:'demoivre',name:"De Moivre's Theorem",cat:'Complex Numbers',module:'maths',
+  formula:'(cosθ + i sinθ)ⁿ = cos(nθ) + i sin(nθ)',desc:'nth power of unit complex number',
+  vars:[{k:'cosn',l:'cos(nθ)'},{k:'sinn',l:'sin(nθ)'},{k:'theta',l:'Angle θ (°)'},{k:'n',l:'Power n'}],
+  solve(v,t){const{theta,n}=v;
+    if(t==='cosn')return fmt(Math.cos(rad(n*theta)));
+    if(t==='sinn')return fmt(Math.sin(rad(n*theta)));
+  }
+});
+add({id:'euler',name:"Euler's Formula",cat:'Complex Numbers',module:'maths',
+  formula:'e^(iθ) = cosθ + i sinθ',desc:'Euler identity for complex exponential',
+  vars:[{k:'re',l:'Real part cos(θ)'},{k:'im',l:'Imaginary part sin(θ)'},{k:'theta',l:'θ (°)'}],
+  solve(v,t){const{theta}=v;
+    if(t==='re')return fmt(Math.cos(rad(theta)));
+    if(t==='im')return fmt(Math.sin(rad(theta)));
+  }
+});
+
+// ── Logarithms ──
+add({id:'log_base',name:'Change of Base',cat:'Logarithms',module:'maths',
+  formula:'logₐ b = ln b / ln a = log b / log a',desc:'Convert to any base',
+  vars:[{k:'res',l:'logₐ(b)'},{k:'a',l:'Base a'},{k:'b',l:'Argument b'}],
+  solve(v,t){const{res,a,b}=v;
+    if(t==='res')return fmt(Math.log(b)/Math.log(a));
+    if(t==='b')  return fmt(Math.pow(a,res));
+    if(t==='a')  return fmt(Math.pow(b,1/res));
+  }
+});
+add({id:'log_props',name:'Log Properties',cat:'Logarithms',module:'maths',
+  formula:'log(mn)=log m+log n\nlog(m/n)=log m−log n\nlog(mⁿ)=n log m',
+  desc:'Product, quotient, and power rules for log',
+  vars:[{k:'res',l:'log(mⁿ) base-10'},{k:'m',l:'m'},{k:'n',l:'Power n'}],
+  solve(v,t){const{m,n}=v;if(t==='res')return fmt(n*Math.log10(m));}
+});
+
+// ── Coordinate Geometry ──
+add({id:'dist',name:'Distance Formula',cat:'Coordinate Geometry',module:'maths',
+  formula:'d = √[(x₂−x₁)² + (y₂−y₁)²]',desc:'Distance between two points',
+  vars:[{k:'d',l:'Distance d'},{k:'x1',l:'x₁'},{k:'y1',l:'y₁'},{k:'x2',l:'x₂'},{k:'y2',l:'y₂'}],
+  solve(v,t){const{x1,y1,x2,y2}=v;if(t==='d')return fmt(Math.sqrt((x2-x1)**2+(y2-y1)**2));}
+});
+add({id:'slope',name:'Slope & Equation of Line',cat:'Coordinate Geometry',module:'maths',
+  formula:'m = (y₂−y₁)/(x₂−x₁),  y − y₁ = m(x − x₁)',desc:'Gradient and point-slope form',
+  vars:[{k:'m',l:'Slope m'},{k:'x1',l:'x₁'},{k:'y1',l:'y₁'},{k:'x2',l:'x₂'},{k:'y2',l:'y₂'}],
+  solve(v,t){const{m,x1,y1,x2,y2}=v;
+    if(t==='m') return fmt((y2-y1)/(x2-x1));
+    if(t==='x2')return fmt(x1+(y2-y1)/m);
+    if(t==='y2')return fmt(y1+m*(x2-x1));
+  }
+});
+add({id:'section',name:'Section Formula',cat:'Coordinate Geometry',module:'maths',
+  formula:'P = [(mx₂+nx₁)/(m+n), (my₂+ny₁)/(m+n)]',desc:'Point dividing in ratio m:n',
+  vars:[{k:'px',l:'P.x coord'},{k:'py',l:'P.y coord'},{k:'x1',l:'x₁'},{k:'y1',l:'y₁'},{k:'x2',l:'x₂'},{k:'y2',l:'y₂'},{k:'m',l:'Ratio m'},{k:'n',l:'Ratio n'}],
+  solve(v,t){const{x1,y1,x2,y2,m,n}=v;
+    if(t==='px')return fmt((m*x2+n*x1)/(m+n));
+    if(t==='py')return fmt((m*y2+n*y1)/(m+n));
+  }
+});
+add({id:'tri_area',name:'Triangle Area (Coordinates)',cat:'Coordinate Geometry',module:'maths',
+  formula:'A = ½|x₁(y₂−y₃)+x₂(y₃−y₁)+x₃(y₁−y₂)|',desc:'Area from vertex coordinates',
+  vars:[{k:'A',l:'Area A'},{k:'x1',l:'x₁'},{k:'y1',l:'y₁'},{k:'x2',l:'x₂'},{k:'y2',l:'y₂'},{k:'x3',l:'x₃'},{k:'y3',l:'y₃'}],
+  solve(v,t){const{x1,y1,x2,y2,x3,y3}=v;if(t==='A')return fmt(0.5*Math.abs(x1*(y2-y3)+x2*(y3-y1)+x3*(y1-y2)));}
+});
+add({id:'circle_eq',name:'Circle — Standard Equation',cat:'Coordinate Geometry',module:'maths',
+  formula:'(x−h)² + (y−k)² = r²',desc:'Centre (h,k) radius r',
+  vars:[{k:'r',l:'Radius r'},{k:'h',l:'Centre x (h)'},{k:'k',l:'Centre y (k)'},{k:'x',l:'Point x'},{k:'y',l:'Point y'}],
+  solve(v,t){const{h,k,x,y,r}=v;
+    if(t==='r')return fmt(Math.sqrt((x-h)**2+(y-k)**2));
+    if(t==='h')return fmt(x-Math.sqrt(r*r-(y-k)**2));
+  }
+});
+add({id:'tangent_circle',name:'Tangent to Circle',cat:'Coordinate Geometry',module:'maths',
+  formula:'xx₁ + yy₁ = r²  (for circle x²+y²=r²)',desc:'Tangent at point (x₁,y₁) on x²+y²=r²',
+  vars:[{k:'r',l:'Radius r'},{k:'x1',l:'x₁ (on circle)'},{k:'y1',l:'y₁ (on circle)'},{k:'x',l:'Point x'},{k:'y',l:'Point y (solve: tangent passes through?)'}],
+  solve(v,t){const{r,x1,y1}=v;if(t==='r')return fmt(Math.sqrt(x1*x1+y1*y1));}
+});
+add({id:'parabola',name:'Parabola y²=4ax',cat:'Conics',module:'maths',
+  formula:'y² = 4ax\nFocus (a,0), Vertex (0,0), Directrix x = −a\nLatus rectum = 4a',
+  desc:'Standard parabola opening right',
+  vars:[{k:'a',l:'Parameter a'},{k:'focus',l:'Focus (a,0)'},{k:'lr',l:'Latus Rectum 4a'},{k:'dir',l:'Directrix x coord'}],
+  solve(v,t){const{a,lr}=v;
+    if(t==='focus')return fmt(a);
+    if(t==='lr')   return fmt(4*a);
+    if(t==='dir')  return fmt(-a);
+    if(t==='a')    return fmt(lr/4);
+  }
+});
+add({id:'ellipse',name:'Ellipse x²/a²+y²/b²=1',cat:'Conics',module:'maths',
+  formula:'x²/a² + y²/b² = 1, a>b>0\ne=c/a, c=√(a²−b²), b²=a²(1−e²)\nLatus rectum = 2b²/a',
+  desc:'Standard ellipse, a > b',
+  vars:[{k:'a',l:'Semi-major a'},{k:'b',l:'Semi-minor b'},{k:'e',l:'Eccentricity e'},{k:'c',l:'Focus dist c'},{k:'lr',l:'Latus rectum'}],
+  solve(v,t){const{a,b,e,c}=v;
+    if(t==='e')  return fmt(Math.sqrt(1-b*b/(a*a)));
+    if(t==='c')  return fmt(Math.sqrt(a*a-b*b));
+    if(t==='b')  return fmt(a*Math.sqrt(1-e*e));
+    if(t==='a')  return fmt(b/Math.sqrt(1-e*e));
+    if(t==='lr') return fmt(2*b*b/a);
+  }
+});
+add({id:'hyperbola',name:'Hyperbola x²/a²−y²/b²=1',cat:'Conics',module:'maths',
+  formula:'x²/a² − y²/b² = 1\ne=c/a>1, c=√(a²+b²)\nAsymptotes: y=±(b/a)x',
+  desc:'Standard hyperbola',
+  vars:[{k:'a',l:'Semi-transverse a'},{k:'b',l:'Semi-conjugate b'},{k:'e',l:'Eccentricity e'},{k:'c',l:'Focus dist c'},{k:'lr',l:'Latus rectum'}],
+  solve(v,t){const{a,b,e,c}=v;
+    if(t==='e')  return fmt(Math.sqrt(1+b*b/(a*a)));
+    if(t==='c')  return fmt(Math.sqrt(a*a+b*b));
+    if(t==='b')  return fmt(a*Math.sqrt(e*e-1));
+    if(t==='a')  return c?fmt(c/e):null;
+    if(t==='lr') return fmt(2*b*b/a);
+  }
+});
+
+// ── Trigonometry ──
+add({id:'pyth_id',name:'Pythagorean Identity',cat:'Trigonometry',module:'maths',
+  formula:'sin²θ + cos²θ = 1\n1 + tan²θ = sec²θ\n1 + cot²θ = cosec²θ',
+  desc:'Fundamental trig identities',
+  vars:[{k:'sin',l:'sin θ'},{k:'cos',l:'cos θ'},{k:'theta',l:'θ (°)'}],
+  solve(v,t){const{theta}=v;
+    if(t==='sin')return fmt(Math.sin(rad(theta)));
+    if(t==='cos')return fmt(Math.cos(rad(theta)));
+    if(t==='theta')return fmt(deg(Math.asin(v.sin)));
+  }
+});
+add({id:'double_angle',name:'Double Angle Formulas',cat:'Trigonometry',module:'maths',
+  formula:'sin2θ = 2sinθcosθ\ncos2θ = cos²θ−sin²θ = 1−2sin²θ = 2cos²θ−1\ntan2θ = 2tanθ/(1−tan²θ)',
+  desc:'Double angle expressions',
+  vars:[{k:'s2',l:'sin 2θ'},{k:'c2',l:'cos 2θ'},{k:'t2',l:'tan 2θ'},{k:'theta',l:'θ (°)'}],
+  solve(v,t){const{theta}=v;
+    if(t==='s2')return fmt(Math.sin(2*rad(theta)));
+    if(t==='c2')return fmt(Math.cos(2*rad(theta)));
+    if(t==='t2')return fmt(Math.tan(2*rad(theta)));
+  }
+});
+add({id:'sum_to_prod',name:'Sum to Product Formulas',cat:'Trigonometry',module:'maths',
+  formula:'sinA+sinB = 2sin((A+B)/2)cos((A−B)/2)\nsinA−sinB = 2cos((A+B)/2)sin((A−B)/2)\ncosA+cosB = 2cos((A+B)/2)cos((A−B)/2)',
+  desc:'Sum to product transformations',
+  vars:[{k:'s',l:'sinA + sinB'},{k:'A',l:'Angle A (°)'},{k:'B',l:'Angle B (°)'}],
+  solve(v,t){const{A,B}=v;
+    if(t==='s')return fmt(2*Math.sin(rad((A+B)/2))*Math.cos(rad((A-B)/2)));
+  }
+});
+add({id:'sine_rule',name:'Sine Rule',cat:'Trigonometry',module:'maths',
+  formula:'a/sinA = b/sinB = c/sinC = 2R',desc:'For any triangle; R = circumradius',
+  vars:[{k:'a',l:'Side a'},{k:'A',l:'Angle A (°)'},{k:'b',l:'Side b'},{k:'B',l:'Angle B (°)'}],
+  solve(v,t){const{a,A,b,B}=v;
+    if(t==='a')return fmt(b*Math.sin(rad(A))/Math.sin(rad(B)));
+    if(t==='A')return fmt(deg(Math.asin(a*Math.sin(rad(B))/b)));
+    if(t==='b')return fmt(a*Math.sin(rad(B))/Math.sin(rad(A)));
+    if(t==='B')return fmt(deg(Math.asin(b*Math.sin(rad(A))/a)));
+  }
+});
+add({id:'cosine_rule',name:'Cosine Rule',cat:'Trigonometry',module:'maths',
+  formula:'a² = b² + c² − 2bc cosA',desc:'Generalised Pythagoras theorem',
+  vars:[{k:'a',l:'Side a'},{k:'b',l:'Side b'},{k:'c',l:'Side c'},{k:'A',l:'Angle A (°)'}],
+  solve(v,t){const{a,b,c,A}=v;
+    if(t==='a')return fmt(Math.sqrt(b*b+c*c-2*b*c*Math.cos(rad(A))));
+    if(t==='A')return fmt(deg(Math.acos((b*b+c*c-a*a)/(2*b*c))));
+    if(t==='b'){const co=Math.cos(rad(A)),d=4*c*c*co*co-4*(c*c-a*a);return d>=0?fmt((2*c*co+Math.sqrt(d))/2):null;}
+  }
+});
+add({id:'heron',name:"Heron's Formula",cat:'Trigonometry',module:'maths',
+  formula:'A = √[s(s−a)(s−b)(s−c)],  s = (a+b+c)/2',desc:'Triangle area from three sides',
+  vars:[{k:'area',l:'Area A'},{k:'a',l:'Side a'},{k:'b',l:'Side b'},{k:'c',l:'Side c'}],
+  solve(v,t){const{a,b,c}=v;const s=(a+b+c)/2;if(t==='area')return fmt(Math.sqrt(s*(s-a)*(s-b)*(s-c)));}
+});
+add({id:'tri_area2',name:'Triangle Area (2 sides)',cat:'Trigonometry',module:'maths',
+  formula:'A = ½ ab sinC',desc:'Area from two sides and included angle',
+  vars:[{k:'area',l:'Area A'},{k:'a',l:'Side a'},{k:'b',l:'Side b'},{k:'C',l:'Included angle C (°)'}],
+  solve(v,t){const{area,a,b,C}=v;
+    if(t==='area')return fmt(0.5*a*b*Math.sin(rad(C)));
+    if(t==='a')   return fmt(2*area/(b*Math.sin(rad(C))));
+    if(t==='b')   return fmt(2*area/(a*Math.sin(rad(C))));
+    if(t==='C')   return fmt(deg(Math.asin(2*area/(a*b))));
+  }
+});
+add({id:'inv_trig',name:'Inverse Trig Identities',cat:'Trigonometry',module:'maths',
+  formula:'sin⁻¹x + cos⁻¹x = π/2\ntan⁻¹x + cot⁻¹x = π/2\ntan⁻¹x + tan⁻¹y = tan⁻¹[(x+y)/(1−xy)], xy<1',
+  desc:'Inverse trig sum formulas',
+  vars:[{k:'asin',l:'sin⁻¹(x) in °'},{k:'acos',l:'cos⁻¹(x) in °'},{k:'x',l:'x (value, −1 to 1)'}],
+  solve(v,t){const{x}=v;
+    if(t==='asin')return fmt(deg(Math.asin(x)));
+    if(t==='acos')return fmt(deg(Math.acos(x)));
+  }
+});
+
+// ── Vectors ──
+add({id:'vec_dot',name:'Dot Product',cat:'Vectors',module:'maths',
+  formula:'a⃗·b⃗ = |a||b|cosθ = a₁b₁+a₂b₂+a₃b₃',desc:'Scalar dot product',
+  vars:[{k:'dot',l:'a⃗·b⃗'},{k:'a',l:'|a⃗| magnitude'},{k:'b',l:'|b⃗| magnitude'},{k:'theta',l:'Angle θ (°)'}],
+  solve(v,t){const{dot,a,b,theta}=v;
+    if(t==='dot')  return fmt(a*b*Math.cos(rad(theta)));
+    if(t==='theta')return fmt(deg(Math.acos(dot/(a*b))));
+    if(t==='a')    return fmt(dot/(b*Math.cos(rad(theta))));
+  }
+});
+add({id:'vec_cross',name:'Cross Product Magnitude',cat:'Vectors',module:'maths',
+  formula:'|a⃗×b⃗| = |a||b|sinθ',desc:'Magnitude of cross product',
+  vars:[{k:'cross',l:'|a⃗×b⃗|'},{k:'a',l:'|a⃗|'},{k:'b',l:'|b⃗|'},{k:'theta',l:'θ (°)'}],
+  solve(v,t){const{cross,a,b,theta}=v;
+    if(t==='cross')return fmt(a*b*Math.sin(rad(theta)));
+    if(t==='theta')return fmt(deg(Math.asin(cross/(a*b))));
+  }
+});
+add({id:'stp',name:'Scalar Triple Product',cat:'Vectors',module:'maths',
+  formula:'[a b c] = a⃗·(b⃗×c⃗) = Volume of parallelepiped',desc:'STP gives volume',
+  vars:[{k:'V',l:'Volume'},{k:'a1',l:'a₁'},{k:'a2',l:'a₂'},{k:'a3',l:'a₃'},{k:'b1',l:'b₁'},{k:'b2',l:'b₂'},{k:'b3',l:'b₃'},{k:'c1',l:'c₁'},{k:'c2',l:'c₂'},{k:'c3',l:'c₃'}],
+  solve(v,t){const{a1,a2,a3,b1,b2,b3,c1,c2,c3}=v;
+    if(t==='V'){
+      const cross_x=b2*c3-b3*c2, cross_y=b3*c1-b1*c3, cross_z=b1*c2-b2*c1;
+      return fmt(Math.abs(a1*cross_x+a2*cross_y+a3*cross_z));
+    }
+  }
+});
+add({id:'vec_proj',name:'Projection of Vector',cat:'Vectors',module:'maths',
+  formula:'proj_b(a) = (a⃗·b⃗)/|b⃗|',desc:'Scalar projection of a on b',
+  vars:[{k:'proj',l:'Projection'},{k:'a',l:'|a⃗|'},{k:'b',l:'|b⃗|'},{k:'theta',l:'Angle θ (°)'}],
+  solve(v,t){const{a,b,theta}=v;if(t==='proj')return fmt(a*Math.cos(rad(theta)));}
+});
+
+// ── 3D Geometry ──
+add({id:'dist3d',name:'Distance in 3D',cat:'3D Geometry',module:'maths',
+  formula:'d = √[(x₂−x₁)²+(y₂−y₁)²+(z₂−z₁)²]',desc:'Distance between two 3D points',
+  vars:[{k:'d',l:'Distance'},{k:'x1',l:'x₁'},{k:'y1',l:'y₁'},{k:'z1',l:'z₁'},{k:'x2',l:'x₂'},{k:'y2',l:'y₂'},{k:'z2',l:'z₂'}],
+  solve(v,t){const{x1,y1,z1,x2,y2,z2}=v;if(t==='d')return fmt(Math.sqrt((x2-x1)**2+(y2-y1)**2+(z2-z1)**2));}
+});
+add({id:'plane_dist',name:'Distance: Point to Plane',cat:'3D Geometry',module:'maths',
+  formula:'d = |ax₀+by₀+cz₀+d| / √(a²+b²+c²)',desc:'Perpendicular distance from point to plane',
+  vars:[{k:'dist',l:'Distance d'},{k:'a',l:'Plane coeff a'},{k:'b',l:'Plane coeff b'},{k:'c',l:'Plane coeff c'},{k:'dd',l:'Plane const d'},{k:'x0',l:'Point x₀'},{k:'y0',l:'Point y₀'},{k:'z0',l:'Point z₀'}],
+  solve(v,t){const{a,b,c,dd,x0,y0,z0}=v;if(t==='dist')return fmt(Math.abs(a*x0+b*y0+c*z0+dd)/Math.sqrt(a*a+b*b+c*c));}
+});
+add({id:'dc_dr',name:'Direction Cosines',cat:'3D Geometry',module:'maths',
+  formula:'l²+m²+n²=1\nl=a/r, m=b/r, n=c/r, r=√(a²+b²+c²)',desc:'Direction cosines of line with dir ratios (a,b,c)',
+  vars:[{k:'l',l:'l = cos α'},{k:'m',l:'m = cos β'},{k:'n',l:'n = cos γ'},{k:'a',l:'Direction ratio a'},{k:'b',l:'Direction ratio b'},{k:'c',l:'Direction ratio c'}],
+  solve(v,t){const{a,b,c}=v;const r=Math.sqrt(a*a+b*b+c*c);
+    if(t==='l')return fmt(a/r);
+    if(t==='m')return fmt(b/r);
+    if(t==='n')return fmt(c/r);
+  }
+});
+
+// ── Probability ──
+add({id:'prob',name:'Classical Probability',cat:'Probability',module:'maths',
+  formula:'P(A) = n(A)/n(S)',desc:'Probability of event A',
+  vars:[{k:'p',l:'P(A)'},{k:'nA',l:'Favourable n(A)'},{k:'nS',l:'Sample space n(S)'}],
+  solve(v,t){const{p,nA,nS}=v;if(t==='p')return fmt(nA/nS);if(t==='nA')return fmt(p*nS);if(t==='nS')return fmt(nA/p);}
+});
+add({id:'cond_prob',name:'Conditional Probability',cat:'Probability',module:'maths',
+  formula:'P(A|B) = P(A∩B) / P(B)',desc:'Probability of A given B',
+  vars:[{k:'pAB',l:'P(A|B)'},{k:'pAandB',l:'P(A∩B)'},{k:'pB',l:'P(B)'}],
+  solve(v,t){const{pAB,pAandB,pB}=v;
+    if(t==='pAB')    return fmt(pAandB/pB);
+    if(t==='pAandB') return fmt(pAB*pB);
+    if(t==='pB')     return fmt(pAandB/pAB);
+  }
+});
+add({id:'bayes',name:"Bayes' Theorem",cat:'Probability',module:'maths',
+  formula:'P(A|B) = P(B|A)·P(A) / P(B)',desc:'Posterior probability',
+  vars:[{k:'pAB',l:'P(A|B)'},{k:'pBA',l:'P(B|A)'},{k:'pA',l:'P(A)'},{k:'pB',l:'P(B)'}],
+  solve(v,t){const{pAB,pBA,pA,pB}=v;
+    if(t==='pAB')return fmt(pBA*pA/pB);
+    if(t==='pA') return fmt(pAB*pB/pBA);
+    if(t==='pB') return fmt(pBA*pA/pAB);
+  }
+});
+add({id:'binom_prob',name:'Binomial Distribution',cat:'Probability',module:'maths',
+  formula:'P(X=k) = ⁿCₖ · pᵏ · (1−p)ⁿ⁻ᵏ\nMean = np,  Variance = npq',
+  desc:'k successes in n independent trials',
+  vars:[{k:'P',l:'P(X=k)'},{k:'n',l:'Trials n'},{k:'k',l:'Successes k'},{k:'p',l:'Success prob p'}],
+  solve(v,t){const{n,k,p}=v;if(t==='P')return fmt(C(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k));}
+});
+
+// ── Matrices ──
+add({id:'det2',name:'2×2 Determinant',cat:'Matrices',module:'maths',
+  formula:'|A| = ad − bc',desc:'Determinant of [[a,b],[c,d]]',
+  vars:[{k:'det',l:'|A|'},{k:'a',l:'a (r1c1)'},{k:'b',l:'b (r1c2)'},{k:'c',l:'c (r2c1)'},{k:'d',l:'d (r2c2)'}],
+  solve(v,t){const{det,a,b,c,d}=v;
+    if(t==='det')return fmt(a*d-b*c);
+    if(t==='a')  return fmt((det+b*c)/d);
+    if(t==='d')  return fmt((det+b*c)/a);
+  }
+});
+add({id:'det3',name:'3×3 Determinant (Cofactor)',cat:'Matrices',module:'maths',
+  formula:'|A|=a(ei−fh)−b(di−fg)+c(dh−eg)',desc:'3×3 matrix [a b c; d e f; g h i]',
+  vars:[{k:'det',l:'|A|'},{k:'a',l:'a'},{k:'b',l:'b'},{k:'c',l:'c'},{k:'d',l:'d'},{k:'e',l:'e'},{k:'f',l:'f'},{k:'g',l:'g'},{k:'h',l:'h'},{k:'ii',l:'i (row3col3)'}],
+  solve(v,t){const{a,b,c,d,e,f,g,h,ii}=v;if(t==='det')return fmt(a*(e*ii-f*h)-b*(d*ii-f*g)+c*(d*h-e*g));}
+});
+add({id:'mat_inv',name:'2×2 Matrix Inverse',cat:'Matrices',module:'maths',
+  formula:'A⁻¹ = (1/|A|)[[d,−b],[−c,a]]',desc:'Inverse exists only when |A| ≠ 0',
+  vars:[{k:'det',l:'|A|'},{k:'a',l:'a'},{k:'b',l:'b'},{k:'c',l:'c'},{k:'d',l:'d'}],
+  solve(v,t){const{a,b,c,d}=v;if(t==='det')return fmt(a*d-b*c);}
+});
+add({id:'cayley',name:'Cayley–Hamilton Theorem',cat:'Matrices',module:'maths',
+  formula:'Every matrix satisfies its own characteristic equation\nFor 2×2: A² − (tr A)A + (det A)I = 0',
+  desc:'tr(A) = a+d for 2×2 [[a,b],[c,d]]',
+  vars:[{k:'tr',l:'Trace tr(A)'},{k:'det',l:'det(A)'},{k:'a',l:'a'},{k:'b',l:'b'},{k:'c',l:'c'},{k:'d',l:'d'}],
+  solve(v,t){const{a,b,c,d}=v;
+    if(t==='tr') return fmt(a+d);
+    if(t==='det')return fmt(a*d-b*c);
+  }
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// PHYSICS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// ── Kinematics ──
+add({id:'v=u+at',name:'v = u + at',cat:'Kinematics',module:'physics',
+  formula:'v = u + at',desc:'1st equation of motion',
+  vars:[{k:'v',l:'Final vel v (m/s)'},{k:'u',l:'Initial vel u (m/s)'},{k:'a',l:'Acceleration a (m/s²)'},{k:'t',l:'Time t (s)'}],
+  solve(v,t){const{v:vv,u,a,t:tt}=v;
+    if(t==='v')return fmt(u+a*tt);
+    if(t==='u')return fmt(vv-a*tt);
+    if(t==='a')return fmt((vv-u)/tt);
+    if(t==='t')return fmt((vv-u)/a);
+  }
+});
+add({id:'s=ut+½at²',name:'s = ut + ½at²',cat:'Kinematics',module:'physics',
+  formula:'s = ut + ½at²',desc:'2nd equation of motion',
+  vars:[{k:'s',l:'Displacement s (m)'},{k:'u',l:'Initial vel u (m/s)'},{k:'a',l:'Acceleration a (m/s²)'},{k:'t',l:'Time t (s)'}],
+  solve(v,t){const{s,u,a,t:tt}=v;
+    if(t==='s')return fmt(u*tt+0.5*a*tt*tt);
+    if(t==='u')return fmt((s-0.5*a*tt*tt)/tt);
+    if(t==='a')return fmt(2*(s-u*tt)/(tt*tt));
+    if(t==='t'){const disc=u*u+2*a*s;return disc>=0?fmt((-u+Math.sqrt(disc))/a):null;}
+  }
+});
+add({id:'v²=u²+2as',name:'v² = u² + 2as',cat:'Kinematics',module:'physics',
+  formula:'v² = u² + 2as',desc:'3rd equation of motion',
+  vars:[{k:'v',l:'Final vel v (m/s)'},{k:'u',l:'Initial vel u (m/s)'},{k:'a',l:'Acceleration a (m/s²)'},{k:'s',l:'Displacement s (m)'}],
+  solve(v,t){const{v:vv,u,a,s}=v;
+    if(t==='v')return fmt(Math.sqrt(u*u+2*a*s));
+    if(t==='u')return fmt(Math.sqrt(vv*vv-2*a*s));
+    if(t==='a')return fmt((vv*vv-u*u)/(2*s));
+    if(t==='s')return fmt((vv*vv-u*u)/(2*a));
+  }
+});
+add({id:'proj_range',name:'Projectile — Range & Max Height',cat:'Kinematics',module:'physics',
+  formula:'R = u²sin2θ/g,  H = u²sin²θ/(2g)\nT = 2usinθ/g',
+  desc:'Projectile motion on flat ground',
+  vars:[{k:'R',l:'Range R (m)'},{k:'H',l:'Max height H (m)'},{k:'T',l:'Time of flight T (s)'},{k:'u',l:'Launch speed u (m/s)'},{k:'theta',l:'Launch angle θ (°)'},{k:'g',l:'g (m/s²) [9.8]'}],
+  solve(v,t){const{u,theta,g}=v;
+    if(t==='R')return fmt(u*u*Math.sin(2*rad(theta))/g);
+    if(t==='H')return fmt(u*u*Math.sin(rad(theta))**2/(2*g));
+    if(t==='T')return fmt(2*u*Math.sin(rad(theta))/g);
+    if(t==='u')return fmt(Math.sqrt(v.R*g/Math.sin(2*rad(theta))));
+  }
+});
+add({id:'rel_vel',name:'Relative Velocity',cat:'Kinematics',module:'physics',
+  formula:'v_AB = v_A − v_B',desc:'Velocity of A relative to B',
+  vars:[{k:'vAB',l:'v_AB (m/s)'},{k:'vA',l:'v_A'},{k:'vB',l:'v_B'}],
+  solve(v,t){const{vAB,vA,vB}=v;
+    if(t==='vAB')return fmt(vA-vB);
+    if(t==='vA') return fmt(vAB+vB);
+    if(t==='vB') return fmt(vA-vAB);
+  }
+});
+
+// ── Newton's Laws & Mechanics ──
+add({id:'newton2',name:"Newton's 2nd Law",cat:'Newton\'s Laws',module:'physics',
+  formula:'F = ma',desc:'Net force = mass × acceleration',
+  vars:[{k:'F',l:'Net Force F (N)'},{k:'m',l:'Mass m (kg)'},{k:'a',l:'Acceleration a (m/s²)'}],
+  solve(v,t){const{F,m,a}=v;
+    if(t==='F')return fmt(m*a);
+    if(t==='m')return fmt(F/a);
+    if(t==='a')return fmt(F/m);
+  }
+});
+add({id:'friction',name:'Friction Force',cat:'Newton\'s Laws',module:'physics',
+  formula:'f = μN',desc:'Friction force (kinetic or static maximum)',
+  vars:[{k:'f',l:'Friction f (N)'},{k:'mu',l:'Coefficient μ'},{k:'N',l:'Normal force N (N)'}],
+  solve(v,t){const{f,mu,N}=v;
+    if(t==='f') return fmt(mu*N);
+    if(t==='mu')return fmt(f/N);
+    if(t==='N') return fmt(f/mu);
+  }
+});
+add({id:'momentum',name:'Linear Momentum',cat:'Newton\'s Laws',module:'physics',
+  formula:'p = mv',desc:'Linear momentum',
+  vars:[{k:'p',l:'Momentum p (kg·m/s)'},{k:'m',l:'Mass m (kg)'},{k:'v',l:'Velocity v (m/s)'}],
+  solve(v,t){const{p,m,v:vv}=v;
+    if(t==='p')return fmt(m*vv);
+    if(t==='m')return fmt(p/vv);
+    if(t==='v')return fmt(p/m);
+  }
+});
+add({id:'impulse',name:'Impulse–Momentum',cat:'Newton\'s Laws',module:'physics',
+  formula:'J = FΔt = Δp',desc:'Impulse equals change in momentum',
+  vars:[{k:'J',l:'Impulse J (N·s)'},{k:'F',l:'Force F (N)'},{k:'dt',l:'Time Δt (s)'},{k:'dp',l:'Δp (kg·m/s)'}],
+  solve(v,t){const{J,F,dt,dp}=v;
+    if(t==='J')  return fmt(F*dt);
+    if(t==='F')  return fmt(J/dt);
+    if(t==='dt') return fmt(J/F);
+    if(t==='dp') return fmt(F*dt);
+  }
+});
+add({id:'coeff_rest',name:'Coefficient of Restitution',cat:'Newton\'s Laws',module:'physics',
+  formula:'e = (v₂−v₁)/(u₁−u₂)',desc:'Ratio of relative velocity after/before collision',
+  vars:[{k:'e',l:'Coeff of Restitution e'},{k:'v1',l:"A's velocity after v₁"},{k:'v2',l:"B's velocity after v₂"},{k:'u1',l:"A's velocity before u₁"},{k:'u2',l:"B's velocity before u₂"}],
+  solve(v,t){const{e,v1,v2,u1,u2}=v;
+    if(t==='e') return fmt((v2-v1)/(u1-u2));
+    if(t==='v2')return fmt(e*(u1-u2)+v1);
+  }
+});
+
+// ── Work, Energy & Power ──
+add({id:'work',name:'Work Done',cat:'Work, Energy & Power',module:'physics',
+  formula:'W = F·d·cosθ',desc:'Work by force at angle θ',
+  vars:[{k:'W',l:'Work W (J)'},{k:'F',l:'Force F (N)'},{k:'d',l:'Displacement d (m)'},{k:'theta',l:'Angle θ (°)'}],
+  solve(v,t){const{W,F,d,theta}=v;
+    if(t==='W')    return fmt(F*d*Math.cos(rad(theta)));
+    if(t==='F')    return fmt(W/(d*Math.cos(rad(theta))));
+    if(t==='d')    return fmt(W/(F*Math.cos(rad(theta))));
+    if(t==='theta')return fmt(deg(Math.acos(W/(F*d))));
+  }
+});
+add({id:'ke',name:'Kinetic Energy',cat:'Work, Energy & Power',module:'physics',
+  formula:'KE = ½mv²',desc:'Translational kinetic energy',
+  vars:[{k:'KE',l:'KE (J)'},{k:'m',l:'Mass m (kg)'},{k:'v',l:'Velocity v (m/s)'}],
+  solve(v,t){const{KE,m,v:vv}=v;
+    if(t==='KE')return fmt(0.5*m*vv*vv);
+    if(t==='m') return fmt(2*KE/(vv*vv));
+    if(t==='v') return fmt(Math.sqrt(2*KE/m));
+  }
+});
+add({id:'pe_grav',name:'Gravitational PE',cat:'Work, Energy & Power',module:'physics',
+  formula:'U = mgh',desc:'Gravitational potential energy near Earth',
+  vars:[{k:'U',l:'PE U (J)'},{k:'m',l:'Mass m (kg)'},{k:'g',l:'g [9.8]'},{k:'h',l:'Height h (m)'}],
+  solve(v,t){const{U,m,g,h}=v;
+    if(t==='U')return fmt(m*g*h);
+    if(t==='m')return fmt(U/(g*h));
+    if(t==='h')return fmt(U/(m*g));
+    if(t==='g')return fmt(U/(m*h));
+  }
+});
+add({id:'pe_spring',name:'Elastic PE (Spring)',cat:'Work, Energy & Power',module:'physics',
+  formula:'U = ½kx²',desc:'Energy stored in spring',
+  vars:[{k:'U',l:'PE U (J)'},{k:'k',l:'Spring const k (N/m)'},{k:'x',l:'Extension x (m)'}],
+  solve(v,t){const{U,k,x}=v;
+    if(t==='U')return fmt(0.5*k*x*x);
+    if(t==='k')return fmt(2*U/(x*x));
+    if(t==='x')return fmt(Math.sqrt(2*U/k));
+  }
+});
+add({id:'power',name:'Power',cat:'Work, Energy & Power',module:'physics',
+  formula:'P = W/t = Fv cosθ',desc:'Rate of doing work',
+  vars:[{k:'P',l:'Power P (W)'},{k:'W',l:'Work W (J)'},{k:'t',l:'Time t (s)'}],
+  solve(v,t){const{P,W,t:tt}=v;
+    if(t==='P')return fmt(W/tt);
+    if(t==='W')return fmt(P*tt);
+    if(t==='t')return fmt(W/P);
+  }
+});
+
+// ── Circular Motion ──
+add({id:'circ_centripetal',name:'Centripetal Force',cat:'Circular Motion',module:'physics',
+  formula:'F = mv²/r = mω²r',desc:'Centripetal force for circular motion',
+  vars:[{k:'F',l:'Force F (N)'},{k:'m',l:'Mass m (kg)'},{k:'v',l:'Speed v (m/s)'},{k:'r',l:'Radius r (m)'}],
+  solve(v,t){const{F,m,v:vv,r}=v;
+    if(t==='F')return fmt(m*vv*vv/r);
+    if(t==='m')return fmt(F*r/(vv*vv));
+    if(t==='v')return fmt(Math.sqrt(F*r/m));
+    if(t==='r')return fmt(m*vv*vv/F);
+  }
+});
+add({id:'angular_vel',name:'Angular Velocity',cat:'Circular Motion',module:'physics',
+  formula:'ω = 2πf = 2π/T,  v = ωr',desc:'Angular to linear velocity',
+  vars:[{k:'omega',l:'ω (rad/s)'},{k:'f',l:'Frequency f (Hz)'},{k:'T',l:'Period T (s)'},{k:'v',l:'Linear vel v (m/s)'},{k:'r',l:'Radius r (m)'}],
+  solve(v,t){const{omega,f,T,v:vv,r}=v;
+    if(t==='omega')return f?fmt(2*Math.PI*f):T?fmt(2*Math.PI/T):null;
+    if(t==='f')    return fmt(omega/(2*Math.PI));
+    if(t==='T')    return fmt(2*Math.PI/omega);
+    if(t==='v')    return fmt(omega*r);
+    if(t==='r')    return fmt(vv/omega);
+  }
+});
+add({id:'banking',name:'Banked Road Angle',cat:'Circular Motion',module:'physics',
+  formula:'tanθ = v²/(rg)',desc:'Ideal banking angle for no friction',
+  vars:[{k:'theta',l:'Banking angle θ (°)'},{k:'v',l:'Speed v (m/s)'},{k:'r',l:'Radius r (m)'},{k:'g',l:'g [9.8]'}],
+  solve(v,t){const{theta,v:vv,r,g}=v;
+    if(t==='theta')return fmt(deg(Math.atan(vv*vv/(r*g))));
+    if(t==='v')    return fmt(Math.sqrt(r*g*Math.tan(rad(theta))));
+    if(t==='r')    return fmt(vv*vv/(g*Math.tan(rad(theta))));
+  }
+});
+
+// ── Rotational Motion ──
+add({id:'torque',name:'Torque',cat:'Rotational Motion',module:'physics',
+  formula:'τ = rF sinθ = Iα',desc:'Torque (moment of force)',
+  vars:[{k:'tau',l:'Torque τ (N·m)'},{k:'r',l:'Radius r (m)'},{k:'F',l:'Force F (N)'},{k:'theta',l:'Angle θ (°)'}],
+  solve(v,t){const{tau,r,F,theta}=v;
+    if(t==='tau')  return fmt(r*F*Math.sin(rad(theta)));
+    if(t==='r')    return fmt(tau/(F*Math.sin(rad(theta))));
+    if(t==='F')    return fmt(tau/(r*Math.sin(rad(theta))));
+    if(t==='theta')return fmt(deg(Math.asin(tau/(r*F))));
+  }
+});
+add({id:'moi_solid_sphere',name:'MOI — Solid Sphere',cat:'Rotational Motion',module:'physics',
+  formula:'I = (2/5)MR²',desc:'Moment of inertia of solid sphere about diameter',
+  vars:[{k:'I',l:'MOI I (kg·m²)'},{k:'M',l:'Mass M (kg)'},{k:'R',l:'Radius R (m)'}],
+  solve(v,t){const{I,M,R}=v;
+    if(t==='I')return fmt(2/5*M*R*R);
+    if(t==='M')return fmt(5*I/(2*R*R));
+    if(t==='R')return fmt(Math.sqrt(5*I/(2*M)));
+  }
+});
+add({id:'moi_ring',name:'MOI — Ring',cat:'Rotational Motion',module:'physics',
+  formula:'I = MR² (axis through centre, ⊥ plane)',desc:'Moment of inertia of ring',
+  vars:[{k:'I',l:'MOI I (kg·m²)'},{k:'M',l:'Mass M (kg)'},{k:'R',l:'Radius R (m)'}],
+  solve(v,t){const{I,M,R}=v;
+    if(t==='I')return fmt(M*R*R);
+    if(t==='M')return fmt(I/(R*R));
+    if(t==='R')return fmt(Math.sqrt(I/M));
+  }
+});
+add({id:'moi_disc',name:'MOI — Disc / Cylinder',cat:'Rotational Motion',module:'physics',
+  formula:'I = ½MR² (axis through centre, ⊥ face)',desc:'MOI of solid disc or cylinder',
+  vars:[{k:'I',l:'MOI I (kg·m²)'},{k:'M',l:'Mass M (kg)'},{k:'R',l:'Radius R (m)'}],
+  solve(v,t){const{I,M,R}=v;
+    if(t==='I')return fmt(0.5*M*R*R);
+    if(t==='M')return fmt(2*I/(R*R));
+    if(t==='R')return fmt(Math.sqrt(2*I/M));
+  }
+});
+add({id:'moi_rod',name:'MOI — Rod (centre)',cat:'Rotational Motion',module:'physics',
+  formula:'I = ML²/12 (axis at centre, ⊥ rod)',desc:'MOI of uniform rod about central axis',
+  vars:[{k:'I',l:'MOI I (kg·m²)'},{k:'M',l:'Mass M (kg)'},{k:'L',l:'Length L (m)'}],
+  solve(v,t){const{I,M,L}=v;
+    if(t==='I')return fmt(M*L*L/12);
+    if(t==='M')return fmt(12*I/(L*L));
+    if(t==='L')return fmt(Math.sqrt(12*I/M));
+  }
+});
+add({id:'parallel_axis',name:'Parallel Axis Theorem',cat:'Rotational Motion',module:'physics',
+  formula:'I = I_cm + Md²',desc:'MOI about parallel axis at distance d from cm',
+  vars:[{k:'I',l:'I about new axis'},{k:'Icm',l:'I_cm (about cm)'},{k:'M',l:'Mass M (kg)'},{k:'d',l:'Distance d (m)'}],
+  solve(v,t){const{I,Icm,M,d}=v;
+    if(t==='I')   return fmt(Icm+M*d*d);
+    if(t==='Icm') return fmt(I-M*d*d);
+    if(t==='d')   return fmt(Math.sqrt((I-Icm)/M));
+  }
+});
+add({id:'angular_momentum',name:'Angular Momentum',cat:'Rotational Motion',module:'physics',
+  formula:'L = Iω = mvr sinθ',desc:'Angular momentum',
+  vars:[{k:'L',l:'L (kg·m²/s)'},{k:'I',l:'MOI I (kg·m²)'},{k:'omega',l:'ω (rad/s)'}],
+  solve(v,t){const{L,I,omega}=v;
+    if(t==='L')    return fmt(I*omega);
+    if(t==='I')    return fmt(L/omega);
+    if(t==='omega')return fmt(L/I);
+  }
+});
+add({id:'rot_ke',name:'Rotational KE',cat:'Rotational Motion',module:'physics',
+  formula:'KE_rot = ½Iω²',desc:'KE of rotating body',
+  vars:[{k:'KE',l:'KE (J)'},{k:'I',l:'MOI I (kg·m²)'},{k:'omega',l:'ω (rad/s)'}],
+  solve(v,t){const{KE,I,omega}=v;
+    if(t==='KE')   return fmt(0.5*I*omega*omega);
+    if(t==='I')    return fmt(2*KE/(omega*omega));
+    if(t==='omega')return fmt(Math.sqrt(2*KE/I));
+  }
+});
+add({id:'rolling',name:'Rolling Without Slipping',cat:'Rotational Motion',module:'physics',
+  formula:'v_cm = ωR,  KE_total = ½mv²(1 + k²/R²)',desc:'k = radius of gyration',
+  vars:[{k:'v',l:'v_cm (m/s)'},{k:'omega',l:'ω (rad/s)'},{k:'R',l:'Radius R (m)'}],
+  solve(v,t){const{v:vv,omega,R}=v;
+    if(t==='v')    return fmt(omega*R);
+    if(t==='omega')return fmt(vv/R);
+    if(t==='R')    return fmt(vv/omega);
+  }
+});
+
+// ── Gravitation ──
+add({id:'grav_force',name:"Newton's Law of Gravitation",cat:'Gravitation',module:'physics',
+  formula:'F = Gm₁m₂/r²  (G = 6.674×10⁻¹¹)',desc:'Universal gravitational force',
+  vars:[{k:'F',l:'Force F (N)'},{k:'G',l:'G (6.674e-11)'},{k:'m1',l:'m₁ (kg)'},{k:'m2',l:'m₂ (kg)'},{k:'r',l:'Distance r (m)'}],
+  solve(v,t){const{F,G,m1,m2,r}=v;
+    if(t==='F')  return fmt(G*m1*m2/(r*r));
+    if(t==='m1') return fmt(F*r*r/(G*m2));
+    if(t==='m2') return fmt(F*r*r/(G*m1));
+    if(t==='r')  return fmt(Math.sqrt(G*m1*m2/F));
+    if(t==='G')  return fmt(F*r*r/(m1*m2));
+  }
+});
+add({id:'g_field',name:'Gravitational Field Strength',cat:'Gravitation',module:'physics',
+  formula:'g = GM/R²',desc:'Surface gravity of a planet',
+  vars:[{k:'g',l:'g (m/s²)'},{k:'G',l:'G (6.674e-11)'},{k:'M',l:'Planet mass M (kg)'},{k:'R',l:'Planet radius R (m)'}],
+  solve(v,t){const{g,G,M,R}=v;
+    if(t==='g')return fmt(G*M/(R*R));
+    if(t==='M')return fmt(g*R*R/G);
+    if(t==='R')return fmt(Math.sqrt(G*M/g));
+  }
+});
+add({id:'escape_vel',name:'Escape Velocity',cat:'Gravitation',module:'physics',
+  formula:'v_e = √(2GM/R) = √(2gR)',desc:'Minimum launch speed to escape gravity',
+  vars:[{k:'ve',l:'v_e (m/s)'},{k:'G',l:'G (6.674e-11)'},{k:'M',l:'Mass M (kg)'},{k:'R',l:'Radius R (m)'}],
+  solve(v,t){const{ve,G,M,R}=v;
+    if(t==='ve')return fmt(Math.sqrt(2*G*M/R));
+    if(t==='M') return fmt(ve*ve*R/(2*G));
+    if(t==='R') return fmt(2*G*M/(ve*ve));
+  }
+});
+add({id:'orbital_vel',name:'Orbital Velocity',cat:'Gravitation',module:'physics',
+  formula:'v_o = √(GM/R)',desc:'Speed for circular orbit at radius R',
+  vars:[{k:'vo',l:'v_o (m/s)'},{k:'G',l:'G (6.674e-11)'},{k:'M',l:'Central mass M (kg)'},{k:'R',l:'Orbital radius R (m)'}],
+  solve(v,t){const{vo,G,M,R}=v;
+    if(t==='vo')return fmt(Math.sqrt(G*M/R));
+    if(t==='M') return fmt(vo*vo*R/G);
+    if(t==='R') return fmt(G*M/(vo*vo));
+  }
+});
+add({id:'kepler3',name:"Kepler's 3rd Law",cat:'Gravitation',module:'physics',
+  formula:'T² ∝ R³  →  T² = (4π²/GM)R³',desc:'Orbital period vs radius',
+  vars:[{k:'T',l:'Period T (s)'},{k:'R',l:'Orbital radius R (m)'},{k:'G',l:'G (6.674e-11)'},{k:'M',l:'Central mass M (kg)'}],
+  solve(v,t){const{T,R,G,M}=v;
+    if(t==='T')return fmt(2*Math.PI*Math.sqrt(R*R*R/(G*M)));
+    if(t==='R')return fmt(Math.cbrt(G*M*(T/(2*Math.PI))**2));
+    if(t==='M')return fmt(4*Math.PI**2*R*R*R/(G*T*T));
+  }
+});
+add({id:'grav_pe',name:'Gravitational Potential Energy',cat:'Gravitation',module:'physics',
+  formula:'U = −GMm/r',desc:'Gravitational PE between two masses',
+  vars:[{k:'U',l:'PE U (J)'},{k:'G',l:'G (6.674e-11)'},{k:'M',l:'M (kg)'},{k:'m',l:'m (kg)'},{k:'r',l:'r (m)'}],
+  solve(v,t){const{G,M,m,r}=v;
+    if(t==='U')return fmt(-G*M*m/r);
+    if(t==='r')return fmt(-G*M*m/v.U);
+  }
+});
+
+// ── SHM & Waves ──
+add({id:'shm_acc',name:'SHM — Acceleration',cat:'Oscillations & Waves',module:'physics',
+  formula:'a = −ω²x',desc:'Restoring acceleration in SHM',
+  vars:[{k:'a',l:'Acceleration a (m/s²)'},{k:'omega',l:'ω (rad/s)'},{k:'x',l:'Displacement x (m)'}],
+  solve(v,t){const{a,omega,x}=v;
+    if(t==='a')    return fmt(-omega*omega*x);
+    if(t==='omega')return fmt(Math.sqrt(Math.abs(a/x)));
+    if(t==='x')    return fmt(-a/(omega*omega));
+  }
+});
+add({id:'shm_vel',name:'SHM — Velocity',cat:'Oscillations & Waves',module:'physics',
+  formula:'v = ω√(A²−x²)',desc:'Velocity at displacement x in SHM',
+  vars:[{k:'v',l:'Velocity v (m/s)'},{k:'omega',l:'ω (rad/s)'},{k:'A',l:'Amplitude A (m)'},{k:'x',l:'Displacement x (m)'}],
+  solve(v,t){const{v:vv,omega,A,x}=v;
+    if(t==='v')    return fmt(omega*Math.sqrt(A*A-x*x));
+    if(t==='A')    return fmt(Math.sqrt(vv*vv/(omega*omega)+x*x));
+    if(t==='omega')return fmt(vv/Math.sqrt(A*A-x*x));
+  }
+});
+add({id:'spring_shm',name:'Spring–Mass Period',cat:'Oscillations & Waves',module:'physics',
+  formula:'T = 2π√(m/k)',desc:'Period of mass–spring SHM',
+  vars:[{k:'T',l:'Period T (s)'},{k:'m',l:'Mass m (kg)'},{k:'k',l:'Spring const k (N/m)'}],
+  solve(v,t){const{T,m,k}=v;
+    if(t==='T')return fmt(2*Math.PI*Math.sqrt(m/k));
+    if(t==='m')return fmt(k*(T/(2*Math.PI))**2);
+    if(t==='k')return fmt(m*(2*Math.PI/T)**2);
+  }
+});
+add({id:'pendulum',name:'Simple Pendulum Period',cat:'Oscillations & Waves',module:'physics',
+  formula:'T = 2π√(L/g)',desc:'Period of simple pendulum (small angles)',
+  vars:[{k:'T',l:'Period T (s)'},{k:'L',l:'Length L (m)'},{k:'g',l:'g [9.8]'}],
+  solve(v,t){const{T,L,g}=v;
+    if(t==='T')return fmt(2*Math.PI*Math.sqrt(L/g));
+    if(t==='L')return fmt(g*(T/(2*Math.PI))**2);
+    if(t==='g')return fmt(L*(2*Math.PI/T)**2);
+  }
+});
+add({id:'wave',name:'Wave Speed',cat:'Oscillations & Waves',module:'physics',
+  formula:'v = fλ = ω/k',desc:'Relation between wave speed, frequency, wavelength',
+  vars:[{k:'v',l:'Speed v (m/s)'},{k:'f',l:'Frequency f (Hz)'},{k:'lambda',l:'Wavelength λ (m)'}],
+  solve(v,t){const{v:vv,f,lambda}=v;
+    if(t==='v')     return fmt(f*lambda);
+    if(t==='f')     return fmt(vv/lambda);
+    if(t==='lambda')return fmt(vv/f);
+  }
+});
+add({id:'doppler',name:'Doppler Effect',cat:'Oscillations & Waves',module:'physics',
+  formula:"f' = f(v ± v_o)/(v ∓ v_s)\n+ top: observer towards source; − bottom: source towards observer",
+  desc:'Observed frequency due to relative motion',
+  vars:[{k:'fo',l:"Observed f' (Hz)"},{k:'f',l:'Source f (Hz)'},{k:'v',l:'Sound speed v (m/s)'},{k:'vo',l:'Observer speed v_o'},{k:'vs',l:'Source speed v_s'}],
+  solve(v,t){const{f,v:vv,vo,vs}=v;
+    if(t==='fo')return fmt(f*(vv+vo)/(vv-vs));
+    if(t==='f') return fmt(v.fo*(vv-vs)/(vv+vo));
+  }
+});
+add({id:'resonance_string',name:'String Resonance',cat:'Oscillations & Waves',module:'physics',
+  formula:'f_n = n/(2L) · √(T/μ)',desc:'nth harmonic of string; μ = mass/length',
+  vars:[{k:'fn',l:'Frequency f_n (Hz)'},{k:'n',l:'Harmonic n'},{k:'L',l:'Length L (m)'},{k:'T',l:'Tension T (N)'},{k:'mu',l:'Linear density μ (kg/m)'}],
+  solve(v,t){const{n,L,T,mu}=v;if(t==='fn')return fmt(n/(2*L)*Math.sqrt(T/mu));}
+});
+
+// ── Thermal Physics ──
+add({id:'ideal_gas',name:'Ideal Gas Law',cat:'Thermal Physics',module:'physics',
+  formula:'PV = nRT   (R = 8.314 J/mol·K)',desc:'Equation of state for ideal gas',
+  vars:[{k:'P',l:'Pressure P (Pa)'},{k:'V',l:'Volume V (m³)'},{k:'n',l:'Moles n'},{k:'R',l:'R (8.314)'},{k:'T',l:'Temperature T (K)'}],
+  solve(v,t){const{P,V,n,R,T}=v;
+    if(t==='P')return fmt(n*R*T/V);
+    if(t==='V')return fmt(n*R*T/P);
+    if(t==='n')return fmt(P*V/(R*T));
+    if(t==='T')return fmt(P*V/(n*R));
+    if(t==='R')return fmt(P*V/(n*T));
+  }
+});
+add({id:'heat',name:'Specific Heat Capacity',cat:'Thermal Physics',module:'physics',
+  formula:'Q = mcΔT',desc:'Heat energy transferred',
+  vars:[{k:'Q',l:'Heat Q (J)'},{k:'m',l:'Mass m (kg)'},{k:'c',l:'Specific heat c (J/kg·K)'},{k:'dT',l:'ΔT (K)'}],
+  solve(v,t){const{Q,m,c,dT}=v;
+    if(t==='Q') return fmt(m*c*dT);
+    if(t==='m') return fmt(Q/(c*dT));
+    if(t==='c') return fmt(Q/(m*dT));
+    if(t==='dT')return fmt(Q/(m*c));
+  }
+});
+add({id:'latent',name:'Latent Heat',cat:'Thermal Physics',module:'physics',
+  formula:'Q = mL',desc:'Heat for phase change',
+  vars:[{k:'Q',l:'Heat Q (J)'},{k:'m',l:'Mass m (kg)'},{k:'L',l:'Latent heat L (J/kg)'}],
+  solve(v,t){const{Q,m,L}=v;
+    if(t==='Q')return fmt(m*L);
+    if(t==='m')return fmt(Q/L);
+    if(t==='L')return fmt(Q/m);
+  }
+});
+add({id:'thermodynamics1',name:"1st Law of Thermodynamics",cat:'Thermal Physics',module:'physics',
+  formula:'ΔU = Q − W',desc:'Change in internal energy',
+  vars:[{k:'dU',l:'ΔU (J)'},{k:'Q',l:'Heat added Q (J)'},{k:'W',l:'Work done by gas W (J)'}],
+  solve(v,t){const{dU,Q,W}=v;
+    if(t==='dU')return fmt(Q-W);
+    if(t==='Q') return fmt(dU+W);
+    if(t==='W') return fmt(Q-dU);
+  }
+});
+add({id:'carnot',name:'Carnot Efficiency',cat:'Thermal Physics',module:'physics',
+  formula:'η = 1 − T_C/T_H',desc:'Maximum efficiency of heat engine',
+  vars:[{k:'eta',l:'Efficiency η'},{k:'TC',l:'Cold res. T_C (K)'},{k:'TH',l:'Hot res. T_H (K)'}],
+  solve(v,t){const{eta,TC,TH}=v;
+    if(t==='eta')return fmt(1-TC/TH);
+    if(t==='TC') return fmt(TH*(1-eta));
+    if(t==='TH') return fmt(TC/(1-eta));
+  }
+});
+add({id:'stefan',name:'Stefan–Boltzmann Law',cat:'Thermal Physics',module:'physics',
+  formula:'P = εσAT⁴   (σ = 5.67×10⁻⁸)',desc:'Radiated power from a body',
+  vars:[{k:'P',l:'Power P (W)'},{k:'eps',l:'Emissivity ε'},{k:'sigma',l:'σ (5.67e-8)'},{k:'A',l:'Area A (m²)'},{k:'T',l:'Temperature T (K)'}],
+  solve(v,t){const{eps,sigma,A,T}=v;
+    if(t==='P')return fmt(eps*sigma*A*Math.pow(T,4));
+    if(t==='T')return fmt(Math.pow(v.P/(eps*sigma*A),0.25));
+    if(t==='A')return fmt(v.P/(eps*sigma*Math.pow(T,4)));
+  }
+});
+add({id:'newton_cooling',name:"Newton's Law of Cooling",cat:'Thermal Physics',module:'physics',
+  formula:'dT/dt = −k(T − T₀)',desc:'Rate of cooling proportional to excess temperature',
+  vars:[{k:'rate',l:'dT/dt (K/s)'},{k:'k',l:'Cooling const k'},{k:'T',l:'Body temp T (K)'},{k:'T0',l:'Ambient T₀ (K)'}],
+  solve(v,t){const{k,T,T0}=v;if(t==='rate')return fmt(-k*(T-T0));}
+});
+
+// ── Electrostatics ──
+add({id:'coulomb',name:"Coulomb's Law",cat:'Electrostatics',module:'physics',
+  formula:'F = kq₁q₂/r²   (k = 8.99×10⁹)',desc:'Force between point charges',
+  vars:[{k:'F',l:'Force F (N)'},{k:'k',l:'k (8.99e9)'},{k:'q1',l:'q₁ (C)'},{k:'q2',l:'q₂ (C)'},{k:'r',l:'r (m)'}],
+  solve(v,t){const{F,k,q1,q2,r}=v;
+    if(t==='F') return fmt(k*q1*q2/(r*r));
+    if(t==='r') return fmt(Math.sqrt(k*q1*q2/F));
+    if(t==='q1')return fmt(F*r*r/(k*q2));
+    if(t==='q2')return fmt(F*r*r/(k*q1));
+  }
+});
+add({id:'e_field',name:'Electric Field',cat:'Electrostatics',module:'physics',
+  formula:'E = F/q = kQ/r²',desc:'Electric field due to point charge',
+  vars:[{k:'E',l:'E field E (N/C)'},{k:'k',l:'k (8.99e9)'},{k:'Q',l:'Source charge Q (C)'},{k:'r',l:'Distance r (m)'}],
+  solve(v,t){const{E,k,Q,r}=v;
+    if(t==='E')return fmt(k*Q/(r*r));
+    if(t==='Q')return fmt(E*r*r/k);
+    if(t==='r')return fmt(Math.sqrt(k*Q/E));
+  }
+});
+add({id:'e_potential',name:'Electric Potential',cat:'Electrostatics',module:'physics',
+  formula:'V = kQ/r',desc:'Electric potential due to point charge',
+  vars:[{k:'V',l:'Potential V (V)'},{k:'k',l:'k (8.99e9)'},{k:'Q',l:'Charge Q (C)'},{k:'r',l:'Distance r (m)'}],
+  solve(v,t){const{V,k,Q,r}=v;
+    if(t==='V')return fmt(k*Q/r);
+    if(t==='Q')return fmt(V*r/k);
+    if(t==='r')return fmt(k*Q/V);
+  }
+});
+add({id:'cap_energy',name:'Capacitor Energy',cat:'Electrostatics',module:'physics',
+  formula:'U = ½CV² = Q²/2C = QV/2',desc:'Energy stored in capacitor',
+  vars:[{k:'U',l:'Energy U (J)'},{k:'C',l:'Capacitance C (F)'},{k:'V',l:'Voltage V (V)'}],
+  solve(v,t){const{U,C,V}=v;
+    if(t==='U')return fmt(0.5*C*V*V);
+    if(t==='C')return fmt(2*U/(V*V));
+    if(t==='V')return fmt(Math.sqrt(2*U/C));
+  }
+});
+add({id:'gauss',name:"Gauss's Law",cat:'Electrostatics',module:'physics',
+  formula:'ΦE = Q_enc/ε₀   (ε₀ = 8.85×10⁻¹²)',desc:'Electric flux through closed surface',
+  vars:[{k:'phi',l:'Flux Φ (N·m²/C)'},{k:'Q',l:'Enclosed charge Q (C)'},{k:'eps0',l:'ε₀ (8.85e-12)'}],
+  solve(v,t){const{phi,Q,eps0}=v;
+    if(t==='phi')return fmt(Q/eps0);
+    if(t==='Q')  return fmt(phi*eps0);
+  }
+});
+
+// ── Current Electricity ──
+add({id:'ohm',name:"Ohm's Law",cat:'Current Electricity',module:'physics',
+  formula:'V = IR',desc:'Voltage, current and resistance',
+  vars:[{k:'V',l:'Voltage V (V)'},{k:'I',l:'Current I (A)'},{k:'R',l:'Resistance R (Ω)'}],
+  solve(v,t){const{V,I,R}=v;
+    if(t==='V')return fmt(I*R);
+    if(t==='I')return fmt(V/R);
+    if(t==='R')return fmt(V/I);
+  }
+});
+add({id:'power_elec',name:'Electrical Power',cat:'Current Electricity',module:'physics',
+  formula:'P = VI = I²R = V²/R',desc:'Power dissipation in resistor',
+  vars:[{k:'P',l:'Power P (W)'},{k:'V',l:'Voltage V (V)'},{k:'I',l:'Current I (A)'},{k:'R',l:'Resistance R (Ω)'}],
+  solve(v,t){const{P,V,I,R}=v;
+    if(t==='P')return fmt(V*I);
+    if(t==='V')return fmt(I?P/I:Math.sqrt(P*R));
+    if(t==='I')return fmt(V?P/V:Math.sqrt(P/R));
+    if(t==='R')return fmt(V?V*V/P:P/(I*I));
+  }
+});
+add({id:'kirchhoff',name:'Kirchhoff Laws',cat:'Current Electricity',module:'physics',
+  formula:'KCL: ΣI = 0 (at node)\nKVL: ΣV = 0 (in loop)',
+  desc:'Kirchhoff Current and Voltage Laws',
+  vars:[{k:'I_in',l:'Sum of incoming I'},{k:'I_out',l:'Sum of outgoing I'}],
+  solve(v,t){const{I_in}=v;if(t==='I_out')return fmt(I_in);}
+});
+add({id:'res_series',name:'Resistance — Series',cat:'Current Electricity',module:'physics',
+  formula:'R_total = R₁ + R₂ + R₃ + …',desc:'Equivalent resistance in series',
+  vars:[{k:'Rt',l:'R_total'},{k:'R1',l:'R₁'},{k:'R2',l:'R₂'},{k:'R3',l:'R₃ (0 if unused)'}],
+  solve(v,t){const{R1,R2,R3}=v;if(t==='Rt')return fmt(R1+R2+R3);}
+});
+add({id:'res_parallel',name:'Resistance — Parallel',cat:'Current Electricity',module:'physics',
+  formula:'1/R_total = 1/R₁ + 1/R₂ + 1/R₃',desc:'Equivalent resistance in parallel',
+  vars:[{k:'Rt',l:'R_total'},{k:'R1',l:'R₁'},{k:'R2',l:'R₂'},{k:'R3',l:'R₃ (∞ if unused, e.g. 1e9)'}],
+  solve(v,t){const{R1,R2,R3}=v;if(t==='Rt')return fmt(1/(1/R1+1/R2+1/R3));}
+});
+add({id:'wheatstone',name:'Wheatstone Bridge',cat:'Current Electricity',module:'physics',
+  formula:'P/Q = R/S  (at balance, I_G = 0)',desc:'Balanced Wheatstone bridge condition',
+  vars:[{k:'P',l:'P'},{k:'Q',l:'Q'},{k:'R',l:'R'},{k:'S',l:'S (unknown)'}],
+  solve(v,t){const{P,Q,R,S}=v;
+    if(t==='S')return fmt(R*Q/P);
+    if(t==='R')return fmt(P*S/Q);
+    if(t==='P')return fmt(Q*R/S);
+    if(t==='Q')return fmt(P*S/R);
+  }
+});
+add({id:'cell_emf',name:'EMF and Internal Resistance',cat:'Current Electricity',module:'physics',
+  formula:'ε = V + Ir = I(R + r)',desc:'Terminal voltage and internal resistance',
+  vars:[{k:'eps',l:'EMF ε (V)'},{k:'V',l:'Terminal voltage V (V)'},{k:'I',l:'Current I (A)'},{k:'r',l:'Internal resistance r (Ω)'},{k:'R',l:'External R (Ω)'}],
+  solve(v,t){const{eps,V,I,r,R}=v;
+    if(t==='eps')return fmt(I*(R+r));
+    if(t==='V')  return fmt(eps-I*r);
+    if(t==='I')  return fmt(eps/(R+r));
+    if(t==='r')  return fmt((eps-V)/I);
+    if(t==='R')  return fmt(eps/I-r);
+  }
+});
+
+// ── Magnetism ──
+add({id:'mag_force_charge',name:'Magnetic Force on Charge',cat:'Magnetism',module:'physics',
+  formula:'F = qvB sinθ',desc:'Lorentz magnetic force',
+  vars:[{k:'F',l:'Force F (N)'},{k:'q',l:'Charge q (C)'},{k:'v',l:'Speed v (m/s)'},{k:'B',l:'B field B (T)'},{k:'theta',l:'Angle θ (°)'}],
+  solve(v,t){const{F,q,v:vv,B,theta}=v;
+    if(t==='F')    return fmt(q*vv*B*Math.sin(rad(theta)));
+    if(t==='B')    return fmt(F/(q*vv*Math.sin(rad(theta))));
+    if(t==='v')    return fmt(F/(q*B*Math.sin(rad(theta))));
+    if(t==='theta')return fmt(deg(Math.asin(F/(q*vv*B))));
+  }
+});
+add({id:'mag_force_wire',name:'Force on Current-Carrying Wire',cat:'Magnetism',module:'physics',
+  formula:'F = BIL sinθ',desc:'Force on wire in magnetic field',
+  vars:[{k:'F',l:'Force F (N)'},{k:'B',l:'B (T)'},{k:'I',l:'Current I (A)'},{k:'L',l:'Length L (m)'},{k:'theta',l:'θ (°)'}],
+  solve(v,t){const{F,B,I,L,theta}=v;
+    if(t==='F')return fmt(B*I*L*Math.sin(rad(theta)));
+    if(t==='B')return fmt(F/(I*L*Math.sin(rad(theta))));
+    if(t==='I')return fmt(F/(B*L*Math.sin(rad(theta))));
+    if(t==='L')return fmt(F/(B*I*Math.sin(rad(theta))));
+  }
+});
+add({id:'biot_savart',name:'Biot–Savart Law (Straight Wire)',cat:'Magnetism',module:'physics',
+  formula:'B = μ₀I/(2πr)   (μ₀ = 4π×10⁻⁷)',desc:'Magnetic field due to long straight wire',
+  vars:[{k:'B',l:'B field B (T)'},{k:'mu0',l:'μ₀ (4πe-7)'},{k:'I',l:'Current I (A)'},{k:'r',l:'Perpendicular dist r (m)'}],
+  solve(v,t){const{mu0,I,r}=v;
+    if(t==='B')return fmt(mu0*I/(2*Math.PI*r));
+    if(t==='I')return fmt(v.B*2*Math.PI*r/mu0);
+    if(t==='r')return fmt(mu0*I/(2*Math.PI*v.B));
+  }
+});
+add({id:'b_solenoid',name:'Magnetic Field — Solenoid',cat:'Magnetism',module:'physics',
+  formula:'B = μ₀nI',desc:'B inside solenoid (n = turns/length)',
+  vars:[{k:'B',l:'B (T)'},{k:'mu0',l:'μ₀ (4πe-7)'},{k:'n',l:'n (turns/m)'},{k:'I',l:'Current I (A)'}],
+  solve(v,t){const{mu0,n,I}=v;
+    if(t==='B')return fmt(mu0*n*I);
+    if(t==='n')return fmt(v.B/(mu0*I));
+    if(t==='I')return fmt(v.B/(mu0*n));
+  }
+});
+add({id:'faraday',name:"Faraday's Law of Induction",cat:'Magnetism',module:'physics',
+  formula:'ε = −dΦ/dt = −N·dΦ/dt',desc:'Induced EMF from changing flux',
+  vars:[{k:'emf',l:'Induced EMF ε (V)'},{k:'N',l:'Turns N'},{k:'dPhi',l:'ΔΦ change in flux (Wb)'},{k:'dt',l:'Time Δt (s)'}],
+  solve(v,t){const{N,dPhi,dt}=v;
+    if(t==='emf') return fmt(-N*dPhi/dt);
+    if(t==='dPhi')return fmt(-v.emf*dt/N);
+    if(t==='N')   return fmt(-v.emf*dt/dPhi);
+  }
+});
+add({id:'lenz',name:"Lenz's Law / Self-Inductance",cat:'Magnetism',module:'physics',
+  formula:'ε = −L·dI/dt',desc:'EMF due to self-inductance L',
+  vars:[{k:'emf',l:'EMF ε (V)'},{k:'L',l:'Inductance L (H)'},{k:'dI',l:'ΔI change in current (A)'},{k:'dt',l:'Δt (s)'}],
+  solve(v,t){const{L,dI,dt}=v;
+    if(t==='emf')return fmt(-L*dI/dt);
+    if(t==='L')  return fmt(-v.emf*dt/dI);
+  }
+});
+add({id:'ind_energy',name:'Energy in Inductor',cat:'Magnetism',module:'physics',
+  formula:'U = ½LI²',desc:'Magnetic energy stored in inductor',
+  vars:[{k:'U',l:'Energy U (J)'},{k:'L',l:'Inductance L (H)'},{k:'I',l:'Current I (A)'}],
+  solve(v,t){const{U,L,I}=v;
+    if(t==='U')return fmt(0.5*L*I*I);
+    if(t==='L')return fmt(2*U/(I*I));
+    if(t==='I')return fmt(Math.sqrt(2*U/L));
+  }
+});
+add({id:'ac_resonance',name:'AC Resonance / Impedance',cat:'Magnetism',module:'physics',
+  formula:'Z = √(R² + (X_L−X_C)²)\nX_L=ωL, X_C=1/(ωC)\nResonance: ω₀ = 1/√(LC)',
+  desc:'Impedance and resonant frequency of RLC circuit',
+  vars:[{k:'Z',l:'Impedance Z (Ω)'},{k:'R',l:'Resistance R (Ω)'},{k:'XL',l:'X_L = ωL (Ω)'},{k:'XC',l:'X_C = 1/ωC (Ω)'}],
+  solve(v,t){const{R,XL,XC}=v;if(t==='Z')return fmt(Math.sqrt(R*R+(XL-XC)**2));}
+});
+add({id:'transformer',name:'Transformer Ratio',cat:'Magnetism',module:'physics',
+  formula:'V_p/V_s = N_p/N_s = I_s/I_p',desc:'Ideal transformer voltage-turns-current',
+  vars:[{k:'Vp',l:'Primary V_p'},{k:'Vs',l:'Secondary V_s'},{k:'Np',l:'Primary turns N_p'},{k:'Ns',l:'Secondary turns N_s'},{k:'Ip',l:'Primary current I_p'},{k:'Is',l:'Secondary current I_s'}],
+  solve(v,t){const{Vp,Vs,Np,Ns,Ip,Is}=v;
+    if(t==='Vs')return fmt(Vp*Ns/Np);
+    if(t==='Vp')return fmt(Vs*Np/Ns);
+    if(t==='Ns')return fmt(Np*Vs/Vp);
+    if(t==='Is')return fmt(Ip*Np/Ns);
+    if(t==='Ip')return fmt(Is*Ns/Np);
+  }
+});
+
+// ── Optics ──
+add({id:'snell',name:"Snell's Law",cat:'Optics',module:'physics',
+  formula:'n₁ sinθ₁ = n₂ sinθ₂',desc:'Refraction at interface',
+  vars:[{k:'n1',l:'n₁'},{k:'t1',l:'θ₁ (°)'},{k:'n2',l:'n₂'},{k:'t2',l:'θ₂ (°)'}],
+  solve(v,t){const{n1,t1,n2,t2}=v;
+    if(t==='t2')return fmt(deg(Math.asin(n1*Math.sin(rad(t1))/n2)));
+    if(t==='t1')return fmt(deg(Math.asin(n2*Math.sin(rad(t2))/n1)));
+    if(t==='n2')return fmt(n1*Math.sin(rad(t1))/Math.sin(rad(t2)));
+    if(t==='n1')return fmt(n2*Math.sin(rad(t2))/Math.sin(rad(t1)));
+  }
+});
+add({id:'lens',name:'Lens Formula',cat:'Optics',module:'physics',
+  formula:'1/f = 1/v − 1/u',desc:'Image formation by thin lens (sign convention)',
+  vars:[{k:'f',l:'Focal length f'},{k:'v',l:'Image dist v'},{k:'u',l:'Object dist u (−ve for real)'}],
+  solve(v,t){const{f,v:vv,u}=v;
+    if(t==='f')return fmt(1/(1/vv-1/u));
+    if(t==='v')return fmt(1/(1/f+1/u));
+    if(t==='u')return fmt(1/(1/vv-1/f));
+  }
+});
+add({id:'mirror',name:'Mirror Formula',cat:'Optics',module:'physics',
+  formula:'1/f = 1/v + 1/u,  m = −v/u',desc:'Spherical mirror image formation',
+  vars:[{k:'f',l:'Focal length f'},{k:'v',l:'Image dist v'},{k:'u',l:'Object dist u'},{k:'m',l:'Magnification m'}],
+  solve(v,t){const{f,v:vv,u,m}=v;
+    if(t==='f')return fmt(1/(1/vv+1/u));
+    if(t==='v')return fmt(1/(1/f-1/u));
+    if(t==='u')return fmt(1/(1/f-1/vv));
+    if(t==='m')return fmt(-vv/u);
+  }
+});
+add({id:'lens_maker',name:"Lens Maker's Equation",cat:'Optics',module:'physics',
+  formula:'1/f = (n−1)[1/R₁ − 1/R₂]',desc:'Focal length from radii of curvature',
+  vars:[{k:'f',l:'Focal length f (m)'},{k:'n',l:'Refractive index n'},{k:'R1',l:'R₁ (m)'},{k:'R2',l:'R₂ (m, −ve if concave)'}],
+  solve(v,t){const{n,R1,R2}=v;if(t==='f')return fmt(1/((n-1)*(1/R1-1/R2)));}
+});
+add({id:'tir',name:'Critical Angle (TIR)',cat:'Optics',module:'physics',
+  formula:'sinC = n₂/n₁   (n₁ > n₂)',desc:'Total internal reflection critical angle',
+  vars:[{k:'C',l:'Critical angle C (°)'},{k:'n1',l:'Denser n₁'},{k:'n2',l:'Rarer n₂'}],
+  solve(v,t){const{n1,n2}=v;if(t==='C')return fmt(deg(Math.asin(n2/n1)));}
+});
+add({id:'young',name:"Young's Double Slit",cat:'Optics',module:'physics',
+  formula:'β = λD/d,  y_n = nλD/d',desc:'Fringe width β in YDSE',
+  vars:[{k:'beta',l:'Fringe width β (m)'},{k:'lambda',l:'λ (m)'},{k:'D',l:'Screen dist D (m)'},{k:'d',l:'Slit sep d (m)'}],
+  solve(v,t){const{lambda,D,d}=v;
+    if(t==='beta')  return fmt(lambda*D/d);
+    if(t==='lambda')return fmt(v.beta*d/D);
+    if(t==='D')     return fmt(v.beta*d/lambda);
+    if(t==='d')     return fmt(lambda*D/v.beta);
+  }
+});
+add({id:'diffraction',name:'Single Slit Diffraction',cat:'Optics',module:'physics',
+  formula:'First minimum: a sinθ = λ\nAngular width of central max = 2λ/a',
+  desc:'Condition for first dark fringe',
+  vars:[{k:'theta',l:'θ (°)'},{k:'a',l:'Slit width a (m)'},{k:'lambda',l:'λ (m)'}],
+  solve(v,t){const{a,lambda}=v;
+    if(t==='theta') return fmt(deg(Math.asin(lambda/a)));
+    if(t==='a')     return fmt(lambda/Math.sin(rad(v.theta)));
+    if(t==='lambda')return fmt(a*Math.sin(rad(v.theta)));
+  }
+});
+
+// ── Modern Physics ──
+add({id:'einstein_mc2',name:'Mass–Energy Equivalence',cat:'Modern Physics',module:'physics',
+  formula:'E = mc²   (c = 3×10⁸ m/s)',desc:"Einstein's mass–energy relation",
+  vars:[{k:'E',l:'Energy E (J)'},{k:'m',l:'Mass m (kg)'},{k:'c',l:'c (3e8)'}],
+  solve(v,t){const{m,c}=v;const E=v.E;
+    if(t==='E')return fmt(m*c*c);
+    if(t==='m')return fmt(E/(c*c));
+    if(t==='c')return fmt(Math.sqrt(E/m));
+  }
+});
+add({id:'photoelectric',name:'Photoelectric Effect',cat:'Modern Physics',module:'physics',
+  formula:'E_photon = hf = φ + KE_max\nh = 6.626×10⁻³⁴ J·s',
+  desc:'Photon energy and work function',
+  vars:[{k:'E',l:'Photon E (J)'},{k:'h',l:'h (6.626e-34)'},{k:'f',l:'Frequency f (Hz)'},{k:'phi',l:'Work function φ (J)'},{k:'KE',l:'KE_max (J)'}],
+  solve(v,t){const{E,h,f,phi,KE}=v;
+    if(t==='E')  return fmt(h*f);
+    if(t==='f')  return fmt(E/h);
+    if(t==='KE') return fmt(E-phi);
+    if(t==='phi')return fmt(E-KE);
+    if(t==='h')  return fmt(E/f);
+  }
+});
+add({id:'debroglie',name:'de Broglie Wavelength',cat:'Modern Physics',module:'physics',
+  formula:'λ = h/(mv) = h/p',desc:'Wave nature of matter',
+  vars:[{k:'lambda',l:'λ (m)'},{k:'h',l:'h (6.626e-34)'},{k:'m',l:'Mass m (kg)'},{k:'v',l:'Velocity v (m/s)'}],
+  solve(v,t){const{h,m,v:vv}=v;
+    if(t==='lambda')return fmt(h/(m*vv));
+    if(t==='v')     return fmt(h/(m*v.lambda));
+    if(t==='m')     return fmt(h/(vv*v.lambda));
+  }
+});
+add({id:'bohr',name:'Bohr Energy Levels',cat:'Modern Physics',module:'physics',
+  formula:'Eₙ = −13.6 Z²/n² eV',desc:'Energy of electron in nth Bohr orbit',
+  vars:[{k:'En',l:'Eₙ (eV)'},{k:'Z',l:'Atomic number Z'},{k:'n',l:'Principal quantum n'}],
+  solve(v,t){const{En,Z,n}=v;
+    if(t==='En')return fmt(-13.6*Z*Z/(n*n));
+    if(t==='n') return fmt(Math.sqrt(-13.6*Z*Z/En));
+    if(t==='Z') return fmt(Math.sqrt(-En*n*n/13.6));
+  }
+});
+add({id:'radioactive',name:'Radioactive Decay',cat:'Modern Physics',module:'physics',
+  formula:'N = N₀e^(−λt)',desc:'Undecayed nuclei at time t',
+  vars:[{k:'N',l:'N at time t'},{k:'N0',l:'Initial N₀'},{k:'lambda',l:'Decay const λ (s⁻¹)'},{k:'t',l:'Time t (s)'}],
+  solve(v,t){const{N0,lambda,t:tt}=v;const N=v.N;
+    if(t==='N')      return fmt(N0*Math.exp(-lambda*tt));
+    if(t==='N0')     return fmt(N*Math.exp(lambda*tt));
+    if(t==='lambda') return fmt(Math.log(N0/N)/tt);
+    if(t==='t')      return fmt(Math.log(N0/N)/lambda);
+  }
+});
+add({id:'half_life',name:'Half-Life',cat:'Modern Physics',module:'physics',
+  formula:'t₁/₂ = ln2/λ ≈ 0.693/λ',desc:'Time for half of sample to decay',
+  vars:[{k:'t12',l:'t₁/₂ (s)'},{k:'lambda',l:'Decay const λ (s⁻¹)'}],
+  solve(v,t){const{t12,lambda}=v;
+    if(t==='t12')    return fmt(Math.LN2/lambda);
+    if(t==='lambda') return fmt(Math.LN2/t12);
+  }
+});
+add({id:'heisenberg',name:"Heisenberg Uncertainty",cat:'Modern Physics',module:'physics',
+  formula:'Δx·Δp ≥ h/(4π)\nΔE·Δt ≥ h/(4π)',
+  desc:'Position–momentum uncertainty principle',
+  vars:[{k:'dx',l:'Δx (m)'},{k:'dp',l:'Δp (kg·m/s)'},{k:'h',l:'h (6.626e-34)'}],
+  solve(v,t){const{dx,dp,h}=v;
+    if(t==='dx')return fmt(h/(4*Math.PI*dp));
+    if(t==='dp')return fmt(h/(4*Math.PI*dx));
+  }
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CHEMISTRY
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// ── Atomic Structure ──
+add({id:'rydberg',name:'Rydberg Formula',cat:'Atomic Structure',module:'chemistry',
+  formula:'1/λ = R_H(1/n₁² − 1/n₂²)  (R_H = 1.097×10⁷ m⁻¹)',desc:'Spectral lines of hydrogen',
+  vars:[{k:'lambda',l:'Wavelength λ (m)'},{k:'RH',l:'R_H (1.097e7)'},{k:'n1',l:'Lower level n₁'},{k:'n2',l:'Upper level n₂'}],
+  solve(v,t){const{lambda,RH,n1,n2}=v;
+    if(t==='lambda')return fmt(1/(RH*(1/(n1*n1)-1/(n2*n2))));
+    if(t==='RH')    return fmt(1/(lambda*(1/(n1*n1)-1/(n2*n2))));
+    if(t==='n2')    return fmt(1/Math.sqrt(1/(n1*n1)-1/(RH*lambda)));
+  }
+});
+add({id:'bohr_r',name:'Bohr Radius (nth orbit)',cat:'Atomic Structure',module:'chemistry',
+  formula:'rₙ = n²a₀/Z,  a₀ = 0.529 Å',desc:'Radius of nth Bohr orbit (H-like atom)',
+  vars:[{k:'rn',l:'rₙ (m)'},{k:'n',l:'n'},{k:'Z',l:'Z'},{k:'a0',l:'a₀ (5.29e-11 m)'}],
+  solve(v,t){const{rn,n,Z,a0}=v;
+    if(t==='rn')return fmt(n*n*a0/Z);
+    if(t==='n') return fmt(Math.sqrt(rn*Z/a0));
+    if(t==='Z') return fmt(n*n*a0/rn);
+  }
+});
+add({id:'bohr_v',name:"Bohr Orbit Speed",cat:'Atomic Structure',module:'chemistry',
+  formula:'vₙ = v₀Z/n,  v₀ = 2.18×10⁶ m/s',desc:'Electron speed in nth orbit',
+  vars:[{k:'vn',l:'vₙ (m/s)'},{k:'v0',l:'v₀ (2.18e6)'},{k:'Z',l:'Z'},{k:'n',l:'n'}],
+  solve(v,t){const{v0,Z,n}=v;
+    if(t==='vn')return fmt(v0*Z/n);
+    if(t==='Z') return fmt(v.vn*n/v0);
+    if(t==='n') return fmt(v0*Z/v.vn);
+  }
+});
+add({id:'heisenberg_chem',name:'Heisenberg Uncertainty',cat:'Atomic Structure',module:'chemistry',
+  formula:'Δx·Δp ≥ h/(4π)',desc:'Position–momentum uncertainty',
+  vars:[{k:'dx',l:'Δx (m)'},{k:'dp',l:'Δp (kg·m/s)'},{k:'h',l:'h (6.626e-34)'}],
+  solve(v,t){const{dx,dp,h}=v;
+    if(t==='dx')return fmt(h/(4*Math.PI*dp));
+    if(t==='dp')return fmt(h/(4*Math.PI*dx));
+  }
+});
+add({id:'debroglie_chem',name:'de Broglie Wavelength',cat:'Atomic Structure',module:'chemistry',
+  formula:'λ = h/(mv)',desc:'Matter wave wavelength',
+  vars:[{k:'lambda',l:'λ (m)'},{k:'h',l:'h (6.626e-34)'},{k:'m',l:'m (kg)'},{k:'v',l:'v (m/s)'}],
+  solve(v,t){const{h,m,v:vv}=v;
+    if(t==='lambda')return fmt(h/(m*vv));
+    if(t==='v')     return fmt(h/(m*v.lambda));
+  }
+});
+
+// ── Mole Concept ──
+add({id:'moles',name:'Mole–Mass',cat:'Mole Concept',module:'chemistry',
+  formula:'n = m/M',desc:'Moles from mass and molar mass',
+  vars:[{k:'n',l:'Moles n (mol)'},{k:'m',l:'Mass m (g)'},{k:'M',l:'Molar mass M (g/mol)'}],
+  solve(v,t){const{n,m,M}=v;
+    if(t==='n')return fmt(m/M);
+    if(t==='m')return fmt(n*M);
+    if(t==='M')return fmt(m/n);
+  }
+});
+add({id:'avogadro',name:"Avogadro's Number",cat:'Mole Concept',module:'chemistry',
+  formula:'N = n × Nₐ   (Nₐ = 6.022×10²³)',desc:'Number of particles from moles',
+  vars:[{k:'N',l:'Particles N'},{k:'n',l:'Moles n'},{k:'Na',l:'Nₐ (6.022e23)'}],
+  solve(v,t){const{N,n,Na}=v;
+    if(t==='N') return fmt(n*Na);
+    if(t==='n') return fmt(N/Na);
+    if(t==='Na')return fmt(N/n);
+  }
+});
+add({id:'molarity',name:'Molarity',cat:'Mole Concept',module:'chemistry',
+  formula:'M = n/V  (mol/L)',desc:'Molar concentration',
+  vars:[{k:'M',l:'Molarity M (mol/L)'},{k:'n',l:'Moles n (mol)'},{k:'V',l:'Volume V (L)'}],
+  solve(v,t){const{M:Mm,n,V}=v;
+    if(t==='M')return fmt(n/V);
+    if(t==='n')return fmt(Mm*V);
+    if(t==='V')return fmt(n/Mm);
+  }
+});
+add({id:'molality',name:'Molality',cat:'Mole Concept',module:'chemistry',
+  formula:'m = n_solute/kg_solvent',desc:'Moles of solute per kg of solvent',
+  vars:[{k:'m',l:'Molality m (mol/kg)'},{k:'n',l:'Moles of solute (mol)'},{k:'kg',l:'Solvent mass (kg)'}],
+  solve(v,t){const{m:mm,n,kg}=v;
+    if(t==='m') return fmt(n/kg);
+    if(t==='n') return fmt(mm*kg);
+    if(t==='kg')return fmt(n/mm);
+  }
+});
+add({id:'normality',name:'Normality & Equivalents',cat:'Mole Concept',module:'chemistry',
+  formula:'N = M × n_factor\nEquiv = m/E,  E = M/n_factor',
+  desc:'Equivalents and normality',
+  vars:[{k:'N',l:'Normality N'},{k:'M',l:'Molarity M'},{k:'nf',l:'n-factor'},{k:'E',l:'Eq. weight E'}],
+  solve(v,t){const{M:Mm,nf}=v;
+    if(t==='N')return fmt(Mm*nf);
+    if(t==='E')return fmt(v.E_mm/nf); // E = molar mass / nf — user enters molar mass as M
+  }
+});
+add({id:'perc_comp',name:'Percentage Composition',cat:'Mole Concept',module:'chemistry',
+  formula:'% element = (mass of element/molar mass) × 100',desc:'Mass percent of element in compound',
+  vars:[{k:'pc',l:'% Composition'},{k:'me',l:'Mass of element per formula unit'},{k:'mm',l:'Molar mass of compound'}],
+  solve(v,t){const{me,mm}=v;if(t==='pc')return fmt(me/mm*100);}
+});
+
+// ── Gases ──
+add({id:'ideal_gas_chem',name:'Ideal Gas Law',cat:'Gases',module:'chemistry',
+  formula:'PV = nRT   (R = 0.0821 L·atm/mol·K)',desc:'Ideal gas equation (chemistry units)',
+  vars:[{k:'P',l:'Pressure P (atm)'},{k:'V',l:'Volume V (L)'},{k:'n',l:'Moles n (mol)'},{k:'R',l:'R (0.0821)'},{k:'T',l:'Temperature T (K)'}],
+  solve(v,t){const{P,V,n,R,T}=v;
+    if(t==='P')return fmt(n*R*T/V);
+    if(t==='V')return fmt(n*R*T/P);
+    if(t==='n')return fmt(P*V/(R*T));
+    if(t==='T')return fmt(P*V/(n*R));
+    if(t==='R')return fmt(P*V/(n*T));
+  }
+});
+add({id:'combined_gas',name:'Combined Gas Law',cat:'Gases',module:'chemistry',
+  formula:'P₁V₁/T₁ = P₂V₂/T₂',desc:'Gas law for fixed amount',
+  vars:[{k:'P1',l:'P₁'},{k:'V1',l:'V₁'},{k:'T1',l:'T₁ (K)'},{k:'P2',l:'P₂'},{k:'V2',l:'V₂'},{k:'T2',l:'T₂ (K)'}],
+  solve(v,t){const{P1,V1,T1,P2,V2,T2}=v;
+    if(t==='P2')return fmt(P1*V1*T2/(T1*V2));
+    if(t==='V2')return fmt(P1*V1*T2/(T1*P2));
+    if(t==='T2')return fmt(T1*P2*V2/(P1*V1));
+    if(t==='P1')return fmt(P2*V2*T1/(T2*V1));
+    if(t==='V1')return fmt(P2*V2*T1/(T2*P1));
+    if(t==='T1')return fmt(T2*P1*V1/(P2*V2));
+  }
+});
+add({id:'graham',name:"Graham's Law",cat:'Gases',module:'chemistry',
+  formula:'r₁/r₂ = √(M₂/M₁)',desc:'Rate of diffusion vs molar mass',
+  vars:[{k:'r1',l:'Rate r₁'},{k:'r2',l:'Rate r₂'},{k:'M1',l:'Molar mass M₁'},{k:'M2',l:'Molar mass M₂'}],
+  solve(v,t){const{r1,r2,M1,M2}=v;
+    if(t==='r1')return fmt(r2*Math.sqrt(M2/M1));
+    if(t==='r2')return fmt(r1*Math.sqrt(M1/M2));
+    if(t==='M1')return fmt(M2*(r2/r1)**2);
+    if(t==='M2')return fmt(M1*(r1/r2)**2);
+  }
+});
+add({id:'rms',name:'RMS Speed of Gas',cat:'Gases',module:'chemistry',
+  formula:'u_rms = √(3RT/M)',desc:'Root mean square speed',
+  vars:[{k:'u',l:'u_rms (m/s)'},{k:'R',l:'R (8.314)'},{k:'T',l:'T (K)'},{k:'M',l:'Molar mass M (kg/mol)'}],
+  solve(v,t){const{R,T,M}=v;
+    if(t==='u')return fmt(Math.sqrt(3*R*T/M));
+    if(t==='T')return fmt(v.u*v.u*M/(3*R));
+    if(t==='M')return fmt(3*R*T/(v.u*v.u));
+  }
+});
+add({id:'avg_speed',name:'Average Speed of Gas',cat:'Gases',module:'chemistry',
+  formula:'u_avg = √(8RT/(πM))',desc:'Average molecular speed',
+  vars:[{k:'u',l:'u_avg (m/s)'},{k:'R',l:'R (8.314)'},{k:'T',l:'T (K)'},{k:'M',l:'Molar mass M (kg/mol)'}],
+  solve(v,t){const{R,T,M}=v;
+    if(t==='u')return fmt(Math.sqrt(8*R*T/(Math.PI*M)));
+    if(t==='T')return fmt(Math.PI*v.u*v.u*M/(8*R));
+  }
+});
+add({id:'vdw',name:'Van der Waals Equation',cat:'Gases',module:'chemistry',
+  formula:'(P + an²/V²)(V − nb) = nRT',desc:'Real gas correction to ideal gas law',
+  vars:[{k:'P',l:'P (Pa)'},{k:'V',l:'V (m³)'},{k:'n',l:'n (mol)'},{k:'a',l:'a constant'},{k:'b',l:'b constant'},{k:'R',l:'R (8.314)'},{k:'T',l:'T (K)'}],
+  solve(v,t){const{P,V,n,a,b,R,T}=v;
+    if(t==='P')return fmt((n*R*T/(V-n*b))-(a*n*n/(V*V)));
+    if(t==='T')return fmt((P+a*n*n/(V*V))*(V-n*b)/(n*R));
+  }
+});
+add({id:'compressibility',name:'Compressibility Factor',cat:'Gases',module:'chemistry',
+  formula:'Z = PV/(nRT)',desc:'Z=1 for ideal gas; Z≠1 for real gas',
+  vars:[{k:'Z',l:'Z'},{k:'P',l:'P (atm)'},{k:'V',l:'V (L)'},{k:'n',l:'n (mol)'},{k:'R',l:'R (0.0821)'},{k:'T',l:'T (K)'}],
+  solve(v,t){const{P,V,n,R,T}=v;if(t==='Z')return fmt(P*V/(n*R*T));}
+});
+
+// ── Thermochemistry ──
+add({id:'gibbs',name:'Gibbs Free Energy',cat:'Thermochemistry',module:'chemistry',
+  formula:'ΔG = ΔH − TΔS',desc:'Spontaneity: ΔG < 0 = spontaneous',
+  vars:[{k:'dG',l:'ΔG (kJ/mol)'},{k:'dH',l:'ΔH (kJ/mol)'},{k:'T',l:'T (K)'},{k:'dS',l:'ΔS (kJ/mol·K)'}],
+  solve(v,t){const{dG,dH,T,dS}=v;
+    if(t==='dG')return fmt(dH-T*dS);
+    if(t==='dH')return fmt(dG+T*dS);
+    if(t==='T') return fmt((dH-dG)/dS);
+    if(t==='dS')return fmt((dH-dG)/T);
+  }
+});
+add({id:'gibbs_eq',name:'ΔG° and Equilibrium',cat:'Thermochemistry',module:'chemistry',
+  formula:'ΔG° = −RT ln K = −2.303 RT log K',desc:'Standard Gibbs energy and equilibrium constant',
+  vars:[{k:'dG0',l:'ΔG° (J/mol)'},{k:'R',l:'R (8.314)'},{k:'T',l:'T (K)'},{k:'K',l:'Equilibrium const K'}],
+  solve(v,t){const{R,T,K}=v;
+    if(t==='dG0')return fmt(-R*T*Math.log(K));
+    if(t==='K')  return fmt(Math.exp(-v.dG0/(R*T)));
+    if(t==='T')  return fmt(-v.dG0/(R*Math.log(K)));
+  }
+});
+add({id:'hess',name:"Hess's Law",cat:'Thermochemistry',module:'chemistry',
+  formula:'ΔH_rxn = ΣΔH°f (products) − ΣΔH°f (reactants)',desc:'Enthalpy of reaction from standard enthalpies',
+  vars:[{k:'dH',l:'ΔH_rxn'},{k:'sumP',l:'ΣΔH°f products'},{k:'sumR',l:'ΣΔH°f reactants'}],
+  solve(v,t){const{sumP,sumR}=v;
+    if(t==='dH')  return fmt(sumP-sumR);
+    if(t==='sumP')return fmt(v.dH+sumR);
+    if(t==='sumR')return fmt(sumP-v.dH);
+  }
+});
+add({id:'bond_enthalpy',name:'Bond Enthalpy Method',cat:'Thermochemistry',module:'chemistry',
+  formula:'ΔH = Σ(bonds broken) − Σ(bonds formed)',desc:'Enthalpy change from bond energies',
+  vars:[{k:'dH',l:'ΔH (kJ/mol)'},{k:'broken',l:'Bonds broken (kJ/mol)'},{k:'formed',l:'Bonds formed (kJ/mol)'}],
+  solve(v,t){const{broken,formed}=v;
+    if(t==='dH')   return fmt(broken-formed);
+    if(t==='broken')return fmt(v.dH+formed);
+    if(t==='formed')return fmt(broken-v.dH);
+  }
+});
+add({id:'kirchhoff_chem',name:"Kirchhoff's Law (Thermo)",cat:'Thermochemistry',module:'chemistry',
+  formula:'ΔH(T₂) = ΔH(T₁) + ΔCp(T₂−T₁)',desc:'Temperature dependence of enthalpy',
+  vars:[{k:'dH2',l:'ΔH at T₂'},{k:'dH1',l:'ΔH at T₁'},{k:'dCp',l:'ΔCp (J/mol·K)'},{k:'T1',l:'T₁ (K)'},{k:'T2',l:'T₂ (K)'}],
+  solve(v,t){const{dH1,dCp,T1,T2}=v;if(t==='dH2')return fmt(dH1+dCp*(T2-T1));}
+});
+
+// ── Chemical Equilibrium ──
+add({id:'ph',name:'pH and [H⁺]',cat:'Equilibrium',module:'chemistry',
+  formula:'pH = −log[H⁺],  [H⁺] = 10^(−pH)',desc:'Acid–base pH scale',
+  vars:[{k:'pH',l:'pH'},{k:'H',l:'[H⁺] (mol/L)'}],
+  solve(v,t){const{pH,H}=v;
+    if(t==='pH')return fmt(-Math.log10(H));
+    if(t==='H') return fmt(Math.pow(10,-pH));
+  }
+});
+add({id:'poh',name:'pOH and Water Equilibrium',cat:'Equilibrium',module:'chemistry',
+  formula:'pOH = −log[OH⁻],  pH + pOH = 14',desc:'pOH and relation to pH',
+  vars:[{k:'pOH',l:'pOH'},{k:'OH',l:'[OH⁻] (mol/L)'},{k:'pH',l:'pH'}],
+  solve(v,t){const{pOH,OH,pH}=v;
+    if(t==='pOH')return fmt(-Math.log10(OH));
+    if(t==='OH') return fmt(Math.pow(10,-pOH));
+    if(t==='pH') return fmt(14-pOH);
+  }
+});
+add({id:'henderson',name:'Henderson–Hasselbalch',cat:'Equilibrium',module:'chemistry',
+  formula:'pH = pKa + log([A⁻]/[HA])',desc:'Buffer pH',
+  vars:[{k:'pH',l:'pH'},{k:'pKa',l:'pKa'},{k:'A',l:'[A⁻] (base form)'},{k:'HA',l:'[HA] (acid form)'}],
+  solve(v,t){const{pKa,A,HA}=v;const pH=v.pH;
+    if(t==='pH')  return fmt(pKa+Math.log10(A/HA));
+    if(t==='pKa') return fmt(pH-Math.log10(A/HA));
+    if(t==='A')   return fmt(HA*Math.pow(10,pH-pKa));
+    if(t==='HA')  return fmt(A/Math.pow(10,pH-pKa));
+  }
+});
+add({id:'kp_kc',name:'Kp and Kc',cat:'Equilibrium',module:'chemistry',
+  formula:'Kp = Kc(RT)^Δn  (R = 0.0821)',desc:'Relation between Kp and Kc',
+  vars:[{k:'Kp',l:'Kp'},{k:'Kc',l:'Kc'},{k:'R',l:'R (0.0821)'},{k:'T',l:'T (K)'},{k:'dn',l:'Δn (moles gaseous products − reactants)'}],
+  solve(v,t){const{Kc,R,T,dn}=v;
+    if(t==='Kp')return fmt(Kc*Math.pow(R*T,dn));
+    if(t==='Kc')return fmt(v.Kp/Math.pow(R*T,dn));
+    if(t==='T') return fmt(Math.pow(v.Kp/Kc,1/dn)/R);
+  }
+});
+add({id:'ostwald',name:"Ostwald Dilution",cat:'Equilibrium',module:'chemistry',
+  formula:'Ka = Cα²/(1−α) ≈ Cα²  (weak acid)',desc:'Degree of dissociation',
+  vars:[{k:'Ka',l:'Ka'},{k:'C',l:'Concentration C (mol/L)'},{k:'alpha',l:'Degree of dissociation α'}],
+  solve(v,t){const{Ka,C,alpha}=v;
+    if(t==='Ka')   return fmt(C*alpha*alpha/(1-alpha));
+    if(t==='alpha')return fmt(Math.sqrt(Ka/C));
+    if(t==='C')    return fmt(Ka*(1-alpha)/(alpha*alpha));
+  }
+});
+add({id:'solubility',name:'Solubility Product Ksp',cat:'Equilibrium',module:'chemistry',
+  formula:'AxBy ⇌ xA^y+ + yB^x−\nKsp = [A]ˣ[B]ʸ = (xs)ˣ(ys)ʸ = xˣyʸsˣ⁺ʸ',
+  desc:'Ksp from solubility s for simple 1:1 salts',
+  vars:[{k:'Ksp',l:'Ksp'},{k:'s',l:'Solubility s (mol/L)'}],
+  solve(v,t){const{s}=v;if(t==='Ksp')return fmt(s*s);}
+});
+add({id:'vant_hoff_eq',name:"van't Hoff Equation",cat:'Equilibrium',module:'chemistry',
+  formula:'ln(K₂/K₁) = (ΔH°/R)(1/T₁ − 1/T₂)',desc:'Temperature dependence of equilibrium constant',
+  vars:[{k:'K2',l:'K₂'},{k:'K1',l:'K₁'},{k:'dH',l:'ΔH° (J/mol)'},{k:'R',l:'R (8.314)'},{k:'T1',l:'T₁ (K)'},{k:'T2',l:'T₂ (K)'}],
+  solve(v,t){const{K1,dH,R,T1,T2}=v;
+    if(t==='K2')return fmt(K1*Math.exp(dH/R*(1/T1-1/T2)));
+    if(t==='T2')return fmt(1/(1/T1-R/dH*Math.log(v.K2/K1)));
+  }
+});
+
+// ── Electrochemistry ──
+add({id:'nernst',name:'Nernst Equation',cat:'Electrochemistry',module:'chemistry',
+  formula:'E = E° − (RT/nF)lnQ = E° − (0.0592/n)logQ at 25°C',
+  desc:'Cell potential under non-standard conditions',
+  vars:[{k:'E',l:'Cell potential E (V)'},{k:'E0',l:'Standard E° (V)'},{k:'R',l:'R (8.314)'},{k:'T',l:'T (K)'},{k:'n',l:'Electrons n'},{k:'F',l:'F (96485)'},{k:'Q',l:'Reaction quotient Q'}],
+  solve(v,t){const{E,E0,R,T,n,F,Q}=v;
+    if(t==='E')  return fmt(E0-(R*T/(n*F))*Math.log(Q));
+    if(t==='E0') return fmt(E+(R*T/(n*F))*Math.log(Q));
+    if(t==='Q')  return fmt(Math.exp((E0-E)*n*F/(R*T)));
+    if(t==='n')  return fmt((E0-E)*F/(R*T*Math.log(Q)));
+  }
+});
+add({id:'faraday1',name:"Faraday's 1st Law",cat:'Electrochemistry',module:'chemistry',
+  formula:'m = (MIt)/(nF)',desc:'Mass deposited by electrolysis',
+  vars:[{k:'m',l:'Mass m (g)'},{k:'M',l:'Molar mass M (g/mol)'},{k:'I',l:'Current I (A)'},{k:'t',l:'Time t (s)'},{k:'n',l:'n-factor'},{k:'F',l:'F (96485)'}],
+  solve(v,t){const{M,I,t:tt,n,F}=v;const m=v.m;
+    if(t==='m')return fmt(M*I*tt/(n*F));
+    if(t==='I')return fmt(m*n*F/(M*tt));
+    if(t==='t')return fmt(m*n*F/(M*I));
+    if(t==='n')return fmt(M*I*tt/(m*F));
+  }
+});
+add({id:'gibbs_emf',name:'ΔG and EMF',cat:'Electrochemistry',module:'chemistry',
+  formula:'ΔG° = −nFE°',desc:'Gibbs energy from standard cell EMF',
+  vars:[{k:'dG',l:'ΔG° (J/mol)'},{k:'n',l:'n (electrons)'},{k:'F',l:'F (96485)'},{k:'E',l:'E° (V)'}],
+  solve(v,t){const{n,F,E}=v;const dG=v.dG;
+    if(t==='dG')return fmt(-n*F*E);
+    if(t==='E') return fmt(-dG/(n*F));
+    if(t==='n') return fmt(-dG/(F*E));
+  }
+});
+add({id:'cell_emf',name:'Cell EMF (Standard)',cat:'Electrochemistry',module:'chemistry',
+  formula:'E°_cell = E°_cathode − E°_anode',desc:'Standard EMF from electrode potentials',
+  vars:[{k:'Ecell',l:'E°_cell (V)'},{k:'Ec',l:'E°_cathode (V)'},{k:'Ea',l:'E°_anode (V)'}],
+  solve(v,t){const{Ec,Ea}=v;
+    if(t==='Ecell')return fmt(Ec-Ea);
+    if(t==='Ec')   return fmt(v.Ecell+Ea);
+    if(t==='Ea')   return fmt(Ec-v.Ecell);
+  }
+});
+add({id:'molar_cond',name:'Molar Conductance',cat:'Electrochemistry',module:'chemistry',
+  formula:'Λm = κ/C (κ = conductivity, C in mol/m³)',desc:'Molar conductance from specific conductance',
+  vars:[{k:'Lm',l:'Λm (S·m²/mol)'},{k:'kappa',l:'κ (S/m)'},{k:'C',l:'C (mol/m³)'}],
+  solve(v,t){const{kappa,C}=v;
+    if(t==='Lm')   return fmt(kappa/C);
+    if(t==='kappa')return fmt(v.Lm*C);
+    if(t==='C')    return fmt(kappa/v.Lm);
+  }
+});
+add({id:'kohlrausch',name:"Kohlrausch's Law",cat:'Electrochemistry',module:'chemistry',
+  formula:'Λ∞m = ν₊λ₊ + ν₋λ₋',desc:'Limiting molar conductance from ionic conductances',
+  vars:[{k:'Lm_inf',l:'Λ∞m'},{k:'v_plus',l:'ν₊'},{k:'l_plus',l:'λ₊'},{k:'v_minus',l:'ν₋'},{k:'l_minus',l:'λ₋'}],
+  solve(v,t){const{v_plus,l_plus,v_minus,l_minus}=v;if(t==='Lm_inf')return fmt(v_plus*l_plus+v_minus*l_minus);}
+});
+
+// ── Chemical Kinetics ──
+add({id:'rate_law',name:'Rate Law',cat:'Kinetics',module:'chemistry',
+  formula:'r = k[A]^m[B]^n',desc:'Rate = rate constant × [A]^m × [B]^n',
+  vars:[{k:'r',l:'Rate r'},{k:'k',l:'Rate const k'},{k:'A',l:'[A]'},{k:'m',l:'Order m'},{k:'B',l:'[B]'},{k:'n',l:'Order n'}],
+  solve(v,t){const{k,A,m,B,n}=v;
+    if(t==='r')return fmt(k*Math.pow(A,m)*Math.pow(B,n));
+    if(t==='k')return fmt(v.r/(Math.pow(A,m)*Math.pow(B,n)));
+  }
+});
+add({id:'arrhenius',name:'Arrhenius Equation',cat:'Kinetics',module:'chemistry',
+  formula:'k = A·exp(−Ea/RT)',desc:'Rate constant vs temperature',
+  vars:[{k:'k',l:'Rate const k'},{k:'A',l:'Frequency factor A'},{k:'Ea',l:'Ea (J/mol)'},{k:'R',l:'R (8.314)'},{k:'T',l:'T (K)'}],
+  solve(v,t){const{A,Ea,R,T}=v;const k=v.k;
+    if(t==='k')  return fmt(A*Math.exp(-Ea/(R*T)));
+    if(t==='A')  return fmt(k/Math.exp(-Ea/(R*T)));
+    if(t==='Ea') return fmt(-R*T*Math.log(k/A));
+    if(t==='T')  return fmt(-Ea/(R*Math.log(k/A)));
+  }
+});
+add({id:'arrhenius_two',name:'Arrhenius (Two Temperatures)',cat:'Kinetics',module:'chemistry',
+  formula:'ln(k₂/k₁) = (Ea/R)(1/T₁ − 1/T₂)',desc:'Activation energy from two rate constants',
+  vars:[{k:'k1',l:'k₁'},{k:'k2',l:'k₂'},{k:'Ea',l:'Ea (J/mol)'},{k:'R',l:'R (8.314)'},{k:'T1',l:'T₁ (K)'},{k:'T2',l:'T₂ (K)'}],
+  solve(v,t){const{k1,k2,R,T1,T2}=v;
+    if(t==='Ea')return fmt(R*Math.log(k2/k1)/(1/T1-1/T2));
+    if(t==='k2')return fmt(k1*Math.exp(v.Ea/R*(1/T1-1/T2)));
+    if(t==='T2')return fmt(1/(1/T1-R/v.Ea*Math.log(k2/k1)));
+  }
+});
+add({id:'first_order',name:'First-Order Rate',cat:'Kinetics',module:'chemistry',
+  formula:'ln[A] = ln[A₀] − kt\nt₁/₂ = 0.693/k',
+  desc:'Integrated rate law for first-order',
+  vars:[{k:'A',l:'[A] at t'},{k:'A0',l:'[A₀] initial'},{k:'k',l:'k (s⁻¹)'},{k:'t',l:'Time t (s)'}],
+  solve(v,t){const{A0,k,t:tt}=v;const A=v.A;
+    if(t==='A')  return fmt(A0*Math.exp(-k*tt));
+    if(t==='A0') return fmt(A*Math.exp(k*tt));
+    if(t==='k')  return fmt(Math.log(A0/A)/tt);
+    if(t==='t')  return fmt(Math.log(A0/A)/k);
+  }
+});
+add({id:'second_order',name:'Second-Order Rate',cat:'Kinetics',module:'chemistry',
+  formula:'1/[A] = 1/[A₀] + kt\nt₁/₂ = 1/(k[A₀])',
+  desc:'Integrated rate law for second-order',
+  vars:[{k:'A',l:'[A] at t'},{k:'A0',l:'[A₀] initial'},{k:'k',l:'k (L/mol·s)'},{k:'t',l:'Time t (s)'}],
+  solve(v,t){const{A0,k,t:tt}=v;const A=v.A;
+    if(t==='A')  return fmt(1/(1/A0+k*tt));
+    if(t==='A0') return fmt(1/(1/A-k*tt));
+    if(t==='k')  return fmt((1/A-1/A0)/tt);
+    if(t==='t')  return fmt((1/A-1/A0)/k);
+  }
+});
+add({id:'half_life_order',name:'Half-Life vs Order',cat:'Kinetics',module:'chemistry',
+  formula:'0th: t₁/₂=[A₀]/(2k)\n1st: t₁/₂=0.693/k\n2nd: t₁/₂=1/(k[A₀])',
+  desc:'Half-life formulas for 0,1,2 order reactions',
+  vars:[{k:'t12',l:'t₁/₂ (s)'},{k:'k',l:'Rate const k'},{k:'A0',l:'[A₀] (for 0th or 2nd order)'},{k:'order',l:'Order (0, 1, or 2)'}],
+  solve(v,t){const{k,A0,order}=v;
+    if(t==='t12'){
+      if(order===0)return fmt(A0/(2*k));
+      if(order===1)return fmt(0.6931/k);
+      if(order===2)return fmt(1/(k*A0));
+    }
+  }
+});
+
+// ── Solutions ──
+add({id:'raoult',name:"Raoult's Law",cat:'Solutions',module:'chemistry',
+  formula:"P_solution = x_A · P°_A\nΔP = x_B · P°_A (lowering)",
+  desc:'Vapour pressure lowering by solute',
+  vars:[{k:'P',l:'P_solution'},{k:'xA',l:'Mole fraction x_A (solvent)'},{k:'P0',l:'P°_A (pure VP)'}],
+  solve(v,t){const{xA,P0}=v;
+    if(t==='P')  return fmt(xA*P0);
+    if(t==='xA') return fmt(v.P/P0);
+    if(t==='P0') return fmt(v.P/xA);
+  }
+});
+add({id:'osmotic',name:'Osmotic Pressure',cat:'Solutions',module:'chemistry',
+  formula:'π = iMRT',desc:"van't Hoff osmotic pressure",
+  vars:[{k:'pi',l:'π (atm)'},{k:'i',l:"van't Hoff factor i"},{k:'M',l:'Molarity M (mol/L)'},{k:'R',l:'R (0.0821)'},{k:'T',l:'T (K)'}],
+  solve(v,t){const{i,M:Mm,R,T}=v;
+    if(t==='pi')return fmt(i*Mm*R*T);
+    if(t==='M') return fmt(v.pi/(i*R*T));
+    if(t==='i') return fmt(v.pi/(Mm*R*T));
+    if(t==='T') return fmt(v.pi/(i*Mm*R));
+  }
+});
+add({id:'bpt',name:'Boiling Point Elevation',cat:'Solutions',module:'chemistry',
+  formula:'ΔTb = Kb · m · i',desc:'Colligative elevation of boiling point',
+  vars:[{k:'dTb',l:'ΔTb (K)'},{k:'Kb',l:'Kb (K·kg/mol)'},{k:'m',l:'Molality m (mol/kg)'},{k:'i',l:"i (van't Hoff)"}],
+  solve(v,t){const{Kb,m:mm,i}=v;
+    if(t==='dTb')return fmt(Kb*mm*i);
+    if(t==='m')  return fmt(v.dTb/(Kb*i));
+    if(t==='i')  return fmt(v.dTb/(Kb*mm));
+    if(t==='Kb') return fmt(v.dTb/(mm*i));
+  }
+});
+add({id:'fpt',name:'Freezing Point Depression',cat:'Solutions',module:'chemistry',
+  formula:'ΔTf = Kf · m · i',desc:'Colligative depression of freezing point',
+  vars:[{k:'dTf',l:'ΔTf (K)'},{k:'Kf',l:'Kf (K·kg/mol)'},{k:'m',l:'Molality m (mol/kg)'},{k:'i',l:"i (van't Hoff)"}],
+  solve(v,t){const{Kf,m:mm,i}=v;
+    if(t==='dTf')return fmt(Kf*mm*i);
+    if(t==='m')  return fmt(v.dTf/(Kf*i));
+    if(t==='i')  return fmt(v.dTf/(Kf*mm));
+    if(t==='Kf') return fmt(v.dTf/(mm*i));
+  }
+});
+add({id:'rel_lp',name:'Relative Lowering of VP',cat:'Solutions',module:'chemistry',
+  formula:'ΔP/P° = x_B = i·n_B/(n_A + i·n_B)',desc:'Relative VP lowering (colligative)',
+  vars:[{k:'rl',l:'ΔP/P°'},{k:'nB',l:'moles solute n_B'},{k:'nA',l:'moles solvent n_A'},{k:'i',l:"i (van't Hoff)"}],
+  solve(v,t){const{nB,nA,i}=v;if(t==='rl')return fmt(i*nB/(nA+i*nB));}
+});
+
+// ── Solid State & Surface Chemistry ──
+add({id:'bragg',name:"Bragg's Law",cat:'Solid State',module:'chemistry',
+  formula:'nλ = 2d sinθ',desc:'X-ray diffraction by crystal planes',
+  vars:[{k:'n',l:'Order n'},{k:'lambda',l:'λ (m)'},{k:'d',l:'d-spacing d (m)'},{k:'theta',l:'Bragg angle θ (°)'}],
+  solve(v,t){const{n:nn,lambda,d,theta}=v;
+    if(t==='lambda')return fmt(2*d*Math.sin(rad(theta))/nn);
+    if(t==='d')     return fmt(nn*lambda/(2*Math.sin(rad(theta))));
+    if(t==='theta') return fmt(deg(Math.asin(nn*lambda/(2*d))));
+    if(t==='n')     return fmt(2*d*Math.sin(rad(theta))/lambda);
+  }
+});
+add({id:'beer_lambert',name:'Beer–Lambert Law',cat:'Spectroscopy',module:'chemistry',
+  formula:'A = εcl = log(I₀/I)',desc:'Absorbance in UV-Vis spectroscopy',
+  vars:[{k:'A',l:'Absorbance A'},{k:'eps',l:'Molar absorptivity ε'},{k:'c',l:'Concentration c (mol/L)'},{k:'l',l:'Path length l (cm)'}],
+  solve(v,t){const{eps,c,l}=v;
+    if(t==='A')  return fmt(eps*c*l);
+    if(t==='eps')return fmt(v.A/(c*l));
+    if(t==='c')  return fmt(v.A/(eps*l));
+    if(t==='l')  return fmt(v.A/(eps*c));
+  }
+});
+
+// ── Surface Chemistry / Adsorption ──
+add({id:'freundlich',name:"Freundlich Adsorption Isotherm",cat:'Surface Chemistry',module:'chemistry',
+  formula:'x/m = k·P^(1/n)',desc:'Empirical adsorption isotherm',
+  vars:[{k:'xm',l:'x/m'},{k:'k',l:'Freundlich const k'},{k:'P',l:'Pressure P'},{k:'n',l:'n'}],
+  solve(v,t){const{k,P,n:nn}=v;if(t==='xm')return fmt(k*Math.pow(P,1/nn));}
+});
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let currentModule = 'maths';
+let selectedFormula = null;
+const MODULE_ACCENT = {maths:'#00d4ff', physics:'#f97316', chemistry:'#10b981'};
+const MODULE_BADGE  = {maths:'badge-m', physics:'badge-p', chemistry:'badge-c'};
+
+document.getElementById('total-count').textContent = DB.length;
+
+// ═══════════════════════════════════════════════════════════
+// MODULE SWITCH
+// ═══════════════════════════════════════════════════════════
+function setModule(mod) {
+  currentModule = mod;
+  selectedFormula = null;
+  document.getElementById('search-inp').value = '';
+
+  // Tab active states
+  document.querySelectorAll('.mod-tab').forEach(b => b.classList.remove('t-m','t-p','t-c','t-calc'));
+  const tabMap = {maths:'t-m', physics:'t-p', chemistry:'t-c', calculus:'t-calc'};
+  event.target.classList.add(tabMap[mod]);
+
+  const fs = document.getElementById('formula-section');
+  const cs = document.getElementById('calculus-section');
+  if (mod === 'calculus') {
+    fs.style.display = 'none';
+    cs.style.display = 'block';
+    renderCalcReference();
+  } else {
+    fs.style.display = 'block';
+    cs.style.display = 'none';
+    document.getElementById('reactor').style.display = 'none';
+    // set CSS accent
+    document.documentElement.style.setProperty('--accent', MODULE_ACCENT[mod]);
+    renderCategories();
+    renderCards();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// CATEGORIES
+// ═══════════════════════════════════════════════════════════
+let currentCat = 'All';
+function renderCategories() {
+  const data = DB.filter(f=>f.module===currentModule);
+  const cats = ['All', ...new Set(data.map(f=>f.cat))];
+  const bar = document.getElementById('cat-filter');
+  bar.innerHTML = '';
+  cats.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'cat-btn' + (c===currentCat?' active':'');
+    b.style.setProperty('--accent', MODULE_ACCENT[currentModule]);
+    b.textContent = c;
+    b.onclick = () => { currentCat = c; renderCategories(); renderCards(); };
+    bar.appendChild(b);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER CARDS
+// ═══════════════════════════════════════════════════════════
+function renderCards() {
+  const accent = MODULE_ACCENT[currentModule];
+  const search = document.getElementById('search-inp').value.toLowerCase();
+  const data = DB.filter(f => {
+    if (f.module !== currentModule) return false;
+    if (currentCat !== 'All' && f.cat !== currentCat) return false;
+    if (search && !f.name.toLowerCase().includes(search) &&
+        !f.formula.toLowerCase().includes(search) &&
+        !f.cat.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  document.getElementById('result-count').textContent = `${data.length} FORMULA${data.length!==1?'S':''} FOUND`;
+  const grid = document.getElementById('formula-grid');
+  grid.innerHTML = '';
+  data.forEach((f, i) => {
+    const card = document.createElement('div');
+    card.className = 'f-card anim' + (selectedFormula?.id===f.id?' open':'');
+    card.style.setProperty('--accent-card', accent);
+    card.style.animationDelay = `${i*0.025}s`;
+    card.innerHTML = `
+      <div class="cat-badge" style="background:${accent}15;color:${accent};border:1px solid ${accent}28">${f.cat}</div>
+      <div class="f-name">${f.name}</div>
+      <div class="f-eq">${f.formula.replace(/\n/g,'<br>')}</div>
+      ${f.desc?`<div class="f-desc">${f.desc}</div>`:''}
+      <div class="vars-row">${f.vars.map(v=>`<span class="var-pill">${v.k}</span>`).join('')}</div>
+      <div class="open-label">${selectedFormula?.id===f.id?'▲ REACTOR OPEN':'▼ OPEN REACTOR'}</div>
+    `;
+    card.onclick = () => openReactor(f, accent);
+    grid.appendChild(card);
+  });
+  if (!data.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">∅</div><div class="empty-text">NO FORMULAS FOUND</div></div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// REACTOR
+// ═══════════════════════════════════════════════════════════
+function openReactor(f, accent) {
+  selectedFormula = f;
+  const reactor = document.getElementById('reactor');
+  reactor.style.display = 'block';
+  reactor.style.setProperty('--r-accent', accent);
+
+  document.getElementById('r-name').textContent = f.name;
+  document.getElementById('r-formula').innerHTML = f.formula.replace(/\n/g,'<br>');
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('error-box').style.display = 'none';
+
+  // Populate "solve for" dropdown
+  const sel = document.getElementById('r-solve-for');
+  sel.innerHTML = f.vars.map(v=>`<option value="${v.k}">${v.l}</option>`).join('');
+  sel.value = f.vars[0].k;
+
+  renderReactorInputs();
+  renderCards();
+  reactor.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function renderReactorInputs() {
+  if (!selectedFormula) return;
+  const solveFor = document.getElementById('r-solve-for').value;
+  const grid = document.getElementById('r-inputs');
+  const accent = MODULE_ACCENT[currentModule];
+  grid.innerHTML = '';
+  selectedFormula.vars.filter(v=>v.k!==solveFor).forEach(v => {
+    const g = document.createElement('div');
+    g.className = 'inp-group';
+    g.innerHTML = `<label>${v.l}${v.hint?` <span style="color:#1a3050;font-size:9px">(${v.hint})</span>`:''}</label>
+      <input type="number" step="any" id="inp_${v.k}" placeholder="Enter ${v.l}...">`;
+    grid.appendChild(g);
+  });
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('error-box').style.display = 'none';
+}
+
+function compute() {
+  if (!selectedFormula) return;
+  const solveFor = document.getElementById('r-solve-for').value;
+  const errBox = document.getElementById('error-box');
+  const resBox = document.getElementById('result-box');
+  errBox.style.display = 'none';
+  resBox.style.display = 'none';
+
+  const vals = {};
+  let missing = [];
+  selectedFormula.vars.filter(v=>v.k!==solveFor).forEach(v => {
+    const el = document.getElementById('inp_'+v.k);
+    if (!el || el.value==='' || el.value===null) { missing.push(v.l); return; }
+    vals[v.k] = parseFloat(el.value);
+    if (isNaN(vals[v.k])) missing.push(v.l+' (invalid)');
+  });
+
+  if (missing.length) {
+    errBox.textContent = '⚠ Missing inputs: ' + missing.join(', ');
+    errBox.style.display = 'block';
+    return;
+  }
+
+  let result;
+  try {
+    result = selectedFormula.solve(vals, solveFor);
+  } catch(e) {
+    errBox.textContent = '⚠ Calculation error: ' + e.message;
+    errBox.style.display = 'block';
+    return;
+  }
+
+  if (result === null || result === undefined) {
+    errBox.textContent = '⚠ Cannot solve for this variable with the given inputs. Check values.';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  const targetVar = selectedFormula.vars.find(v=>v.k===solveFor);
+  const accent = MODULE_ACCENT[currentModule];
+  document.getElementById('result-box').style.display = 'block';
+  document.getElementById('r-solve-label').textContent = targetVar?.l || solveFor;
+  document.getElementById('r-result-val').style.color = accent;
+  document.getElementById('r-result-val').style.textShadow = `0 0 24px ${accent}88`;
+  document.getElementById('r-result-val').textContent = result;
+  document.getElementById('r-result-extra').textContent = '';
+}
+
+function clearReactor() {
+  document.querySelectorAll('#r-inputs input').forEach(i=>i.value='');
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('error-box').style.display = 'none';
+}
+
+function closeReactor() {
+  selectedFormula = null;
+  document.getElementById('reactor').style.display = 'none';
+  renderCards();
+}
+
+// ═══════════════════════════════════════════════════════════
+// CALCULUS WORKBENCH
+// ═══════════════════════════════════════════════════════════
+function numericalInteg(expr, variable, lo, hi, steps=4000) {
+  const f = math.compile(expr);
+  const h = (hi-lo)/steps;
+  let s = 0;
+  for (let i=0; i<=steps; i++) {
+    const x = lo + i*h;
+    let y;
+    try { y = f.evaluate({[variable]:x}); } catch(e) { y = 0; }
+    const c = (i===0||i===steps)?1:i%2===0?2:4;
+    s += c*y;
+  }
+  return s*h/3;
+}
+
+function doDiff() {
+  const expr = document.getElementById('c-func').value.trim();
+  const variable = document.getElementById('c-var').value.trim()||'x';
+  const ptStr = document.getElementById('c-diff-pt').value.trim();
+  const errEl = document.getElementById('diff-error');
+  const resEl = document.getElementById('diff-result');
+  errEl.style.display = 'none';
+  resEl.style.display = 'none';
+
+  if (!expr) { errEl.textContent = 'Enter a function.'; errEl.style.display='block'; return; }
+  try {
+    const deriv = math.derivative(expr, variable);
+    const symStr = deriv.toString();
+    document.getElementById('diff-symbolic').textContent = `d/d${variable} = ${symStr}`;
+    const ptEl = document.getElementById('diff-at-point');
+    if (ptStr !== '') {
+      const pt = parseFloat(ptStr);
+      if (!isNaN(pt)) {
+        const val = deriv.evaluate({[variable]: pt});
+        ptEl.innerHTML = `<span style="font-family:'Space Mono',monospace;font-size:12px;color:#34d399">At ${variable}=${pt}: <strong style="font-size:16px">${fmt(val)}</strong></span>`;
+        ptEl.style.display = 'block';
+      } else { ptEl.style.display = 'none'; }
+    } else { ptEl.style.display = 'none'; }
+    resEl.style.display = 'block';
+  } catch(e) {
+    errEl.textContent = 'Error: ' + e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+function doInteg() {
+  const expr = document.getElementById('c-func').value.trim();
+  const variable = document.getElementById('c-var').value.trim()||'x';
+  const lo = parseFloat(document.getElementById('c-lower').value);
+  const hi = parseFloat(document.getElementById('c-upper').value);
+  const errEl = document.getElementById('integ-error');
+  const resEl = document.getElementById('integ-result');
+  errEl.style.display = 'none';
+  resEl.style.display = 'none';
+
+  if (!expr) { errEl.textContent = 'Enter a function.'; errEl.style.display='block'; return; }
+  if (isNaN(lo)||isNaN(hi)) { errEl.textContent = 'Enter valid bounds.'; errEl.style.display='block'; return; }
+  try {
+    const val = numericalInteg(expr, variable, lo, hi);
+    document.getElementById('integ-expr').textContent = `∫[${lo}, ${hi}] (${expr}) d${variable}`;
+    document.getElementById('integ-val').textContent = `= ${fmt(val)}`;
+    resEl.style.display = 'block';
+  } catch(e) {
+    errEl.textContent = 'Error: ' + e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+function renderCalcReference() {
+  const refs = [
+    ['d/dx(xⁿ)','nxⁿ⁻¹'],['d/dx(sin x)','cos x'],['d/dx(cos x)','−sin x'],
+    ['d/dx(tan x)','sec²x'],['d/dx(eˣ)','eˣ'],['d/dx(ln x)','1/x'],
+    ['d/dx(sin⁻¹x)','1/√(1−x²)'],['d/dx(cos⁻¹x)','−1/√(1−x²)'],
+    ['d/dx(tan⁻¹x)','1/(1+x²)'],['d/dx(aˣ)','aˣ ln a'],
+    ['∫xⁿ dx','xⁿ⁺¹/(n+1)+C'],['∫sin x dx','−cos x+C'],
+    ['∫cos x dx','sin x+C'],['∫eˣ dx','eˣ+C'],
+    ['∫1/x dx','ln|x|+C'],['∫tan x dx','ln|sec x|+C'],
+    ['∫sec²x dx','tan x+C'],['∫1/√(1−x²) dx','sin⁻¹x+C'],
+    ['∫1/(1+x²) dx','tan⁻¹x+C'],['∫aˣ dx','aˣ/ln a+C'],
+    ['∫sinh x dx','cosh x+C'],['∫cosh x dx','sinh x+C'],
+  ];
+  const el = document.getElementById('ref-table');
+  el.innerHTML = refs.map(([l,r])=>`<div class="ref-row"><span class="ref-lhs">${l}</span><span class="ref-rhs">${r}</span></div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+currentCat = 'All';
+document.documentElement.style.setProperty('--accent', '#00d4ff');
+renderCategories();
+renderCards();
+</script>
+</body>
+</html>
